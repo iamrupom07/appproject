@@ -1,11 +1,18 @@
+import 'package:ab_abroz_inventory/features/home/presentation/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/home/presentation/home_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/splash',
   routes: [
+    // ── Splash (no shell / no bottom nav) ──────────────────────────────
+    GoRoute(
+      path: '/splash',
+      builder: (context, state) => const SplashScreen(),
+    ),
+
     ShellRoute(
       builder: (context, state, child) {
         return Scaffold(
@@ -89,7 +96,7 @@ const List<String> _tabRoutes = [
 ];
 
 int _currentIndex(String location) {
- final index = _tabRoutes.indexWhere((route) => location.startsWith(route));
+  final index = _tabRoutes.indexWhere((route) => location.startsWith(route));
   return index == -1 ? 0 : index;
 }
 
