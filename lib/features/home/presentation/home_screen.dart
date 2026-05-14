@@ -76,9 +76,7 @@ class HomeScreen extends ConsumerWidget {
           Positioned(
             bottom: AppSizes.spaceLg,
             left: AppSizes.spaceMd,
-            child: FilterFab(
-              onTap: () => _showFiltersSheet(context),
-            ),
+            child: FilterFab(onTap: () => _showFiltersSheet(context)),
           ),
         ],
       ),
@@ -158,9 +156,7 @@ class _HomeHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSizes.spaceMd),
-          HomeSearchBar(
-            onFilterTap: () => _showFiltersSheet(context),
-          ),
+          HomeSearchBar(onFilterTap: () => _showFiltersSheet(context)),
         ],
       ),
     );
@@ -183,10 +179,7 @@ class _HomeHeader extends StatelessWidget {
 // ─── Sticky Header Delegate ────────────────────────────────────────────────────
 
 class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  _StickyHeaderDelegate({
-    required this.topPadding,
-    required this.child,
-  });
+  _StickyHeaderDelegate({required this.topPadding, required this.child});
 
   final double topPadding;
   final Widget child;
@@ -273,10 +266,7 @@ class _FiltersPlaceholderSheet extends StatelessWidget {
           const SizedBox(height: AppSizes.spaceLg),
           Text('Filters', style: AppTextStyles.displayMedium),
           const SizedBox(height: AppSizes.spaceSm),
-          Text(
-            'Advanced filters coming soon.',
-            style: AppTextStyles.bodySmall,
-          ),
+          Text('Advanced filters coming soon.', style: AppTextStyles.bodySmall),
           const SizedBox(height: AppSizes.spaceLg),
         ],
       ),

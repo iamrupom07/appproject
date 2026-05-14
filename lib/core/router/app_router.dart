@@ -1,3 +1,4 @@
+import 'package:ab_abroz_inventory/features/home/presentation/onboarding_screen.dart';
 import 'package:ab_abroz_inventory/features/home/presentation/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/splash',
       builder: (context, state) => const SplashScreen(),
+    ),
+
+    // ── Onboarding (no shell / no bottom nav) ──────────────────────────
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
     ),
 
     ShellRoute(
@@ -52,35 +59,31 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/inventory',
-          builder: (context, state) => const _PlaceholderScreen(
-            title: 'Inventory Screen',
-          ),
+          builder: (context, state) =>
+              const _PlaceholderScreen(title: 'Inventory Screen'),
         ),
         GoRoute(
           path: '/favorites',
-          builder: (context, state) => const _PlaceholderScreen(
-            title: 'Favorites Screen',
-          ),
+          builder: (context, state) =>
+              const _PlaceholderScreen(title: 'Favorites Screen'),
         ),
         GoRoute(
           path: '/contact',
-          builder: (context, state) => const _PlaceholderScreen(
-            title: 'Contact Screen',
-          ),
+          builder: (context, state) =>
+              const _PlaceholderScreen(title: 'Contact Screen'),
         ),
         GoRoute(
           path: '/profile',
-          builder: (context, state) => const _PlaceholderScreen(
-            title: 'Profile Screen',
-          ),
+          builder: (context, state) =>
+              const _PlaceholderScreen(title: 'Profile Screen'),
         ),
       ],
     ),
+
     GoRoute(
       path: '/item/:id',
       builder: (context, state) {
         final id = state.pathParameters['id'] ?? '';
-
         return _PlaceholderScreen(title: 'Item Detail - $id');
       },
     ),
@@ -108,9 +111,7 @@ class _PlaceholderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text(title),
-      ),
+      body: Center(child: Text(title)),
     );
   }
 }

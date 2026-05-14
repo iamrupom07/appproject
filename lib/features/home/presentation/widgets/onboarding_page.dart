@@ -3,17 +3,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
-import '../domain/onboarding_model.dart';
+import '../../domain/onboarding_model.dart';
+import 'search_preview_widget.dart';
 
 /// Renders a single onboarding slide.
 ///
-/// Accepts an [OnboardingPageModel] — fully data-driven so adding new
-/// slides only requires updating the model list, not this widget.
+/// Supports two layout variants via [OnboardingPageType]:
+///   • [OnboardingPageType.image] — large hero image card + optional trust badge.
+///   • [OnboardingPageType.searchPreview] — SearchPreviewWidget mock UI.
 class OnboardingPage extends StatelessWidget {
-  const OnboardingPage({
-    super.key,
-    required this.model,
-  });
+  const OnboardingPage({super.key, required this.model});
 
   final OnboardingPageModel model;
 
@@ -22,10 +21,13 @@ class OnboardingPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Hero image card ─────────────────────────────────────────
-        _HeroImageCard(model: model),
+        // ── Hero area — switches by page type ───────────────────────
+        if (model.pageType == OnboardingPageType.searchPreview)
+          const SearchPreviewWidget()
+        else
+          _HeroImageCard(model: model),
 
-        const SizedBox(height: AppSizes.spaceLg),
+        const SizedBox(height: AppSizes.spaceLg + 4),
 
         // ── Heading ─────────────────────────────────────────────────
         Padding(
@@ -33,7 +35,7 @@ class OnboardingPage extends StatelessWidget {
           child: Text(
             model.heading,
             style: GoogleFonts.outfit(
-              fontSize: 30,
+              fontSize: 32,
               fontWeight: FontWeight.w800,
               color: AppColors.textPrimary,
               height: 1.15,
@@ -71,6 +73,8 @@ class _HeroImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = model.imageUrl ?? '';
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceLg),
       child: Stack(
@@ -81,30 +85,25 @@ class _HeroImageCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSizes.radiusLg + 4),
             child: AspectRatio(
               aspectRatio: 1.05,
-              child: Image.network(
-                model.imageUrl,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return Container(
-                    color: AppColors.pageBackground,
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.gold,
-                        strokeWidth: 2,
-                      ),
-                    ),
-                  );
-                },
-                errorBuilder: (_, __, ___) => Container(
-                  color: AppColors.pageBackground,
-                  child: const Icon(
-                    Icons.construction_rounded,
-                    size: 80,
-                    color: AppColors.gold,
-                  ),
-                ),
-              ),
+              child: imageUrl.isNotEmpty
+                  ? Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          color: AppColors.pageBackground,
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.gold,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (_, __, ___) => _ImagePlaceholder(),
+                    )
+                  : _ImagePlaceholder(),
             ),
           ),
 
@@ -127,12 +126,22 @@ class _HeroImageCard extends StatelessWidget {
   }
 }
 
+class _ImagePlaceholder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.pageBackground,
+      child: const Center(
+        child:
+            Icon(Icons.construction_rounded, size: 80, color: AppColors.gold),
+      ),
+    );
+  }
+}
+
 /// White floating card with shield icon and gold checkmark.
 class _TrustBadgeCard extends StatelessWidget {
-  const _TrustBadgeCard({
-    required this.title,
-    required this.subtitle,
-  });
+  const _TrustBadgeCard({required this.title, required this.subtitle});
 
   final String title;
   final String subtitle;
@@ -165,11 +174,8 @@ class _TrustBadgeCard extends StatelessWidget {
               color: AppColors.pageBackground,
               borderRadius: BorderRadius.circular(AppSizes.radiusSm),
             ),
-            child: const Icon(
-              Icons.verified_user_outlined,
-              size: 20,
-              color: AppColors.textPrimary,
-            ),
+            child: const Icon(Icons.verified_user_outlined,
+                size: 20, color: AppColors.textPrimary),
           ),
           const SizedBox(width: AppSizes.spaceSm + 2),
 
@@ -191,7 +197,6 @@ class _TrustBadgeCard extends StatelessWidget {
                   subtitle,
                   style: GoogleFonts.inter(
                     fontSize: 10.5,
-                    fontWeight: FontWeight.w400,
                     color: AppColors.textSecondary,
                     height: 1.4,
                   ),
@@ -208,11 +213,8 @@ class _TrustBadgeCard extends StatelessWidget {
               color: AppColors.gold,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.check_rounded,
-              size: 15,
-              color: Colors.white,
-            ),
+            child:
+                const Icon(Icons.check_rounded, size: 15, color: Colors.white),
           ),
         ],
       ),

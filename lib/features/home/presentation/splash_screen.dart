@@ -109,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _onLoadComplete() {
     if (!mounted) return;
-    context.go('/home');
+    context.go('/onboarding');
   }
 
   @override
