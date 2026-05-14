@@ -1,10 +1,10 @@
 name: ab_abroz_inventory
 description: AB & Abroz Machinery inventory app.
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -21,7 +21,8 @@ dependencies:
   google_fonts: ^6.2.1
   shimmer: ^3.0.0
   smooth_page_indicator: ^1.1.0
-  carousel_slider: ^4.2.0
+  flutter_carousel_widget: ^3.1.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

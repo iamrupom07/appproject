@@ -12,6 +12,7 @@ class MachineModel {
     required this.imageUrl,
     this.isFeatured = false,
     this.isNew = false,
+    this.isRecentlyAdded = false,
   });
 
   final String id;
@@ -23,6 +24,7 @@ class MachineModel {
   final String imageUrl;
   final bool isFeatured;
   final bool isNew;
+  final bool isRecentlyAdded;
 
   MachineModel copyWith({
     String? id,
@@ -34,6 +36,7 @@ class MachineModel {
     String? imageUrl,
     bool? isFeatured,
     bool? isNew,
+    bool? isRecentlyAdded,
   }) {
     return MachineModel(
       id: id ?? this.id,
@@ -45,6 +48,7 @@ class MachineModel {
       imageUrl: imageUrl ?? this.imageUrl,
       isFeatured: isFeatured ?? this.isFeatured,
       isNew: isNew ?? this.isNew,
+      isRecentlyAdded: isRecentlyAdded ?? this.isRecentlyAdded,
     );
   }
 

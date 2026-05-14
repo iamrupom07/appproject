@@ -41,7 +41,6 @@ final allMachinesProvider = Provider<List<MachineModel>>(
 // ─── Filtered Machines (derived) ─────────────────────────────────────────────
 
 /// Derived provider — recomputes automatically when category or search changes.
-/// No logic in the UI layer.
 final filteredMachinesProvider = Provider<List<MachineModel>>((ref) {
   final all = ref.watch(allMachinesProvider);
   final category = ref.watch(selectedCategoryProvider);
@@ -66,12 +65,32 @@ final filteredMachinesProvider = Provider<List<MachineModel>>((ref) {
   return list;
 });
 
-// ─── Featured Machines (for banner / top strip) ───────────────────────────────
+// ─── Featured Machines (hero carousel) ────────────────────────────────────────
 
 final featuredMachinesProvider = Provider<List<MachineModel>>((ref) {
   return ref
       .watch(allMachinesProvider)
       .where((m) => m.isFeatured)
+      .take(4)
+      .toList();
+});
+
+// ─── Trending Machines ────────────────────────────────────────────────────────
+
+/// Non-featured machines ordered to show in-stock first, then low-stock.
+final trendingMachinesProvider = Provider<List<MachineModel>>((ref) {
+  final all = ref.watch(allMachinesProvider);
+  final nonFeatured = all.where((m) => !m.isFeatured).toList()
+    ..sort((a, b) => a.status.index.compareTo(b.status.index));
+  return nonFeatured.take(3).toList();
+});
+
+// ─── Recently Added Machines ──────────────────────────────────────────────────
+
+final recentlyAddedProvider = Provider<List<MachineModel>>((ref) {
+  return ref
+      .watch(allMachinesProvider)
+      .where((m) => m.isRecentlyAdded)
       .take(3)
       .toList();
 });
