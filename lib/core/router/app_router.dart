@@ -3,6 +3,8 @@ import 'package:ab_abroz_inventory/features/home/presentation/splash_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/detail/presentation/product_detail_screen.dart';
+
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../features/home/presentation/home_screen.dart';
@@ -60,7 +62,7 @@ final GoRouter appRouter = GoRouter(
       path: '/item/:id',
       builder: (context, state) {
         final id = state.pathParameters['id'] ?? '';
-        return _PlaceholderScreen(title: 'Item Detail — $id');
+        return ProductDetailScreen(machineId: id);
       },
     ),
   ],

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/constants/app_colors.dart';
-import '../../../../../core/constants/app_sizes.dart';
-import '../../../../../core/constants/app_text_styles.dart';
+import 'package:ab_abroz_inventory/core/constants/app_colors.dart';
+import 'package:ab_abroz_inventory/core/constants/app_sizes.dart';
+import 'package:ab_abroz_inventory/core/constants/app_text_styles.dart';
 
-/// Sticky bottom bar with:
-///  - Save (icon only)
-///  - Message via Messenger (icon + label)
-///  - Call Now primary CTA
+/// Sticky bottom bar with save, message, and call actions.
 class DetailActionBar extends StatelessWidget {
   const DetailActionBar({
     super.key,
@@ -24,49 +21,44 @@ class DetailActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        AppSizes.spaceMd,
-        AppSizes.spaceSm,
-        AppSizes.spaceMd,
-        MediaQuery.of(context).padding.bottom + AppSizes.spaceSm,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 16,
-            offset: const Offset(0, -4),
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
+
+    return Material(
+      color: AppColors.cardBackground,
+      elevation: 10,
+      shadowColor: Colors.black.withValues(alpha: 0.14),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            AppSizes.spaceMd,
+            AppSizes.spaceSm,
+            AppSizes.spaceMd,
+            bottomInset > 0 ? AppSizes.spaceSm : AppSizes.spaceMd,
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // ── Save ────────────────────────────────────────────────────────
-          _SaveButton(isSaved: isSaved, onTap: onSave),
-
-          const SizedBox(width: AppSizes.spaceMd),
-
-          // ── Message ─────────────────────────────────────────────────────
-          Expanded(
-            child: _MessageButton(onTap: onMessage),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 56,
+                child: _SaveButton(isSaved: isSaved, onTap: onSave),
+              ),
+              const SizedBox(width: AppSizes.spaceSm),
+              Expanded(
+                flex: 4,
+                child: _MessageButton(onTap: onMessage),
+              ),
+              const SizedBox(width: AppSizes.spaceSm),
+              Expanded(
+                flex: 5,
+                child: _CallButton(onTap: onCall),
+              ),
+            ],
           ),
-
-          const SizedBox(width: AppSizes.spaceSm),
-
-          // ── Call Now ────────────────────────────────────────────────────
-          Expanded(
-            flex: 2,
-            child: _CallButton(onTap: onCall),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
-
-// ─── Save Button ──────────────────────────────────────────────────────────────
 
 class _SaveButton extends StatelessWidget {
   const _SaveButton({required this.isSaved, required this.onTap});
@@ -76,35 +68,46 @@ class _SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            switchInCurve: Curves.elasticOut,
-            transitionBuilder: (child, anim) =>
-                ScaleTransition(scale: anim, child: child),
-            child: Icon(
-              isSaved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
-              key: ValueKey(isSaved),
-              size: 26,
-              color: isSaved ? AppColors.gold : AppColors.textSecondary,
-            ),
+    return Semantics(
+      button: true,
+      selected: isSaved,
+      label: isSaved ? 'Saved' : 'Save',
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+        child: SizedBox(
+          height: AppSizes.buttonHeight,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                switchInCurve: Curves.elasticOut,
+                transitionBuilder: (child, anim) =>
+                    ScaleTransition(scale: anim, child: child),
+                child: Icon(
+                  isSaved
+                      ? Icons.bookmark_rounded
+                      : Icons.bookmark_border_rounded,
+                  key: ValueKey(isSaved),
+                  size: 25,
+                  color: isSaved ? AppColors.gold : AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                'Save',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.labelSmall.copyWith(fontSize: 11),
+              ),
+            ],
           ),
-          const SizedBox(height: 2),
-          Text(
-            'Save',
-            style: AppTextStyles.labelSmall.copyWith(fontSize: 11),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
-
-// ─── Message Button ───────────────────────────────────────────────────────────
 
 class _MessageButton extends StatelessWidget {
   const _MessageButton({required this.onTap});
@@ -113,54 +116,16 @@ class _MessageButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return _BarButton(
       onTap: onTap,
-      child: Container(
-        height: AppSizes.buttonHeight,
-        decoration: BoxDecoration(
-          color: AppColors.pageBackground,
-          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Messenger-style blue circle icon
-            Container(
-              width: 28,
-              height: 28,
-              decoration: const BoxDecoration(
-                color: Color(0xFF0084FF),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.chat_bubble_rounded,
-                color: Colors.white,
-                size: 15,
-              ),
-            ),
-            const SizedBox(width: AppSizes.spaceSm),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Message',
-                  style: AppTextStyles.buttonLabel.copyWith(fontSize: 13),
-                ),
-                Text(
-                  'Chat on Messenger',
-                  style: AppTextStyles.labelSmall.copyWith(fontSize: 9),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      icon: Icons.chat_bubble_rounded,
+      label: 'Message',
+      backgroundColor: AppColors.pageBackground,
+      foregroundColor: AppColors.textPrimary,
+      iconBackgroundColor: const Color(0xFF0084FF),
     );
   }
 }
-
-// ─── Call Now Button ──────────────────────────────────────────────────────────
 
 class _CallButton extends StatelessWidget {
   const _CallButton({required this.onTap});
@@ -169,43 +134,104 @@ class _CallButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return _BarButton(
       onTap: onTap,
-      child: Container(
-        height: AppSizes.buttonHeight,
-        decoration: BoxDecoration(
-          color: AppColors.gold,
-          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.phone_rounded,
-              size: 20,
-              color: AppColors.textPrimary,
-            ),
-            const SizedBox(width: AppSizes.spaceSm),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Call Now',
-                  style: AppTextStyles.buttonLabel.copyWith(fontSize: 14),
-                ),
-                Text(
-                  'Speak with our team',
-                  style: AppTextStyles.labelSmall.copyWith(
-                    fontSize: 9,
-                    color: AppColors.textPrimary.withOpacity(0.65),
+      icon: Icons.phone_rounded,
+      label: 'Call Now',
+      backgroundColor: AppColors.gold,
+      foregroundColor: AppColors.textPrimary,
+    );
+  }
+}
+
+class _BarButton extends StatelessWidget {
+  const _BarButton({
+    required this.onTap,
+    required this.icon,
+    required this.label,
+    required this.backgroundColor,
+    required this.foregroundColor,
+    this.iconBackgroundColor,
+  });
+
+  final VoidCallback onTap;
+  final IconData icon;
+  final String label;
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final Color? iconBackgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: label,
+      child: Material(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: SizedBox(
+            height: AppSizes.buttonHeight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceSm),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _ActionIcon(
+                    icon: icon,
+                    iconColor: foregroundColor,
+                    backgroundColor: iconBackgroundColor,
                   ),
-                ),
-              ],
+                  const SizedBox(width: AppSizes.spaceSm),
+                  Flexible(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.buttonLabel.copyWith(
+                        color: foregroundColor,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _ActionIcon extends StatelessWidget {
+  const _ActionIcon({
+    required this.icon,
+    required this.iconColor,
+    this.backgroundColor,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final Color? backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    if (backgroundColor == null) {
+      return Icon(icon, size: 20, color: iconColor);
+    }
+
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: Colors.white, size: 15),
     );
   }
 }
