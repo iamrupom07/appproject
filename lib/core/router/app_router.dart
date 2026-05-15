@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/detail/presentation/product_detail_screen.dart';
+import '../../features/inventory/presentation/inventory_screen.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
@@ -36,8 +37,7 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/inventory',
-          builder: (context, state) =>
-              const _PlaceholderScreen(title: 'Inventory'),
+          builder: (context, state) => const InventoryScreen(),
         ),
         GoRoute(
           path: '/favorites',
