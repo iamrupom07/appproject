@@ -1,9 +1,10 @@
+import 'package:ab_abroz_inventory/features/home/domain/machine_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../home/domain/machine_model.dart';
-import '../data/mock_inventory.dart';
-import '../domain/inventory_filter_model.dart';
-import '../domain/inventory_machine_model.dart';
+import '../../../../features/home/domain/machine_model.dart';
+import '../../data/mock_inventory.dart';
+import '../../domain/inventory_filter_model.dart';
+import '../../domain/inventory_machine_model.dart';
 
 // ─── View Mode ────────────────────────────────────────────────────────────────
 

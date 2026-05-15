@@ -1,3 +1,4 @@
+import 'package:ab_abroz_inventory/features/home/presentation/providers/home_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +10,7 @@ import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../../core/widgets/contact_button.dart';
 import '../../../../../core/widgets/stock_badge.dart';
-import '../../../../home/presentation/providers/home_providers.dart';
+import '../../../../features/home/presentation/providers/home_providers.dart';
 import '../../domain/inventory_machine_model.dart';
 
 /// Horizontal list card for inventory list-view mode.
@@ -36,7 +37,7 @@ class InventoryListCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

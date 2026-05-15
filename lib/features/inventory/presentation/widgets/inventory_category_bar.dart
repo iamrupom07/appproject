@@ -1,10 +1,11 @@
+import 'package:ab_abroz_inventory/features/home/domain/machine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
-import '../../../../home/domain/machine_model.dart';
+import '../../../../features/home/domain/machine_model.dart';
 import '../providers/inventory_providers.dart';
 
 /// Horizontally scrollable category chip row.
@@ -72,7 +73,7 @@ class _CategoryChip extends StatelessWidget {
         width: 72,
         decoration: BoxDecoration(
           color: isActive
-              ? AppColors.gold.withOpacity(0.15)
+              ? AppColors.gold.withValues(alpha: 0.15)
               : AppColors.cardBackground,
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
           border: Border.all(

@@ -124,7 +124,6 @@ class InventoryScreen extends ConsumerWidget {
                       AppSizes.spaceMd,
                       0,
                       AppSizes.spaceMd,
-                      // Extra bottom padding so last card clears the bottom bar
                       96,
                     ),
                     sliver: SliverGrid(
@@ -196,7 +195,7 @@ class _EmptyState extends StatelessWidget {
           Icon(
             Icons.search_off_rounded,
             size: 64,
-            color: AppColors.textSecondary.withOpacity(0.5),
+            color: AppColors.textSecondary.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
           Text(
@@ -212,7 +211,7 @@ class _EmptyState extends StatelessWidget {
             'Try adjusting your search or filters',
             style: TextStyle(
               fontSize: 13,
-              color: AppColors.textSecondary.withOpacity(0.7),
+              color: AppColors.textSecondary.withValues(alpha: 0.7),
             ),
           ),
         ],

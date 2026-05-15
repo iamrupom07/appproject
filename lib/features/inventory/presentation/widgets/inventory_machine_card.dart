@@ -1,3 +1,4 @@
+import 'package:ab_abroz_inventory/features/home/presentation/providers/home_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +10,7 @@ import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../../core/widgets/contact_button.dart';
 import '../../../../../core/widgets/stock_badge.dart';
-import '../../../../home/presentation/providers/home_providers.dart';
+import '../../../../features/home/presentation/providers/home_providers.dart';
 import '../../domain/inventory_machine_model.dart';
 
 /// Grid card for the Inventory screen.
@@ -36,7 +37,7 @@ class InventoryMachineCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 10,
               offset: const Offset(0, 3),
             ),
@@ -166,7 +167,7 @@ class _CardImage extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  Colors.black.withOpacity(0.45),
+                  Colors.black.withValues(alpha: 0.45),
                 ],
               ),
             ),
@@ -286,7 +287,7 @@ class _PhotoCounter extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.45),
+        color: Colors.black.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(AppSizes.radiusPill),
       ),
       child: Row(
@@ -326,11 +327,11 @@ class _FavoriteHeart extends StatelessWidget {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white.withValues(alpha: 0.9),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.12),
+              color: Colors.black.withValues(alpha: 0.12),
               blurRadius: 4,
               offset: const Offset(0, 1),
             ),

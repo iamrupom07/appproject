@@ -38,15 +38,15 @@ class StockBadge extends StatelessWidget {
   (Color, Color) _colors(StockStatus s) => switch (s) {
         StockStatus.inStock => (
             AppColors.inStock,
-            AppColors.inStock.withOpacity(0.12)
+            AppColors.inStock.withValues(alpha: 0.12)
           ),
         StockStatus.lowStock => (
             AppColors.lowStock,
-            AppColors.lowStock.withOpacity(0.12)
+            AppColors.lowStock.withValues(alpha: 0.12)
           ),
         StockStatus.outOfStock => (
             AppColors.outOfStock,
-            AppColors.outOfStock.withOpacity(0.12)
+            AppColors.outOfStock.withValues(alpha: 0.12)
           ),
       };
 }
