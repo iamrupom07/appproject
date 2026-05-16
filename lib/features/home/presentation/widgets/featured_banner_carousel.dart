@@ -143,14 +143,15 @@ class _BannerCard extends StatelessWidget {
                         ),
                         const SizedBox(height: AppSizes.spaceSm),
                         Text(
-                          'Starting at',
+                          'Inquire for Price',
                           style: AppTextStyles.labelSmall.copyWith(
                             color: AppColors.textOnDark.withOpacity(0.6),
                           ),
                         ),
                         Text(
-                          _formatPrice(machine.price),
-                          style: AppTextStyles.priceLarge,
+                          'Price upon request',
+                          style:
+                              AppTextStyles.priceLarge.copyWith(fontSize: 16),
                         ),
                         const SizedBox(height: AppSizes.spaceSm),
                         _ViewDetailsButton(
@@ -177,10 +178,8 @@ class _BannerCard extends StatelessWidget {
                         _StatusChip(
                           icon: Icons.inventory_2_outlined,
                           iconColor: AppColors.inStock,
-                          label: machine.status.label,
-                          sublabel: machine.status == StockStatus.inStock
-                              ? 'Available Now'
-                              : 'Limited Units',
+                          label: 'Available',
+                          sublabel: 'In Stock',
                         ),
                       ],
                     ),
@@ -192,14 +191,6 @@ class _BannerCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatPrice(double price) {
-    final formatted = price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-    return '\$$formatted';
   }
 }
 

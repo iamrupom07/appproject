@@ -14,39 +14,22 @@ class StockBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (color, bg) = _colors(status);
-
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSizes.spaceSm,
         vertical: 3,
       ),
       decoration: BoxDecoration(
-        color: bg,
+        color: AppColors.inStock.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppSizes.radiusPill),
       ),
       child: Text(
-        status.label,
+        'Available',
         style: AppTextStyles.labelSmall.copyWith(
-          color: color,
+          color: AppColors.inStock,
           fontWeight: FontWeight.w600,
         ),
       ),
     );
   }
-
-  (Color, Color) _colors(StockStatus s) => switch (s) {
-        StockStatus.inStock => (
-            AppColors.inStock,
-            AppColors.inStock.withValues(alpha: 0.12)
-          ),
-        StockStatus.lowStock => (
-            AppColors.lowStock,
-            AppColors.lowStock.withValues(alpha: 0.12)
-          ),
-        StockStatus.outOfStock => (
-            AppColors.outOfStock,
-            AppColors.outOfStock.withValues(alpha: 0.12)
-          ),
-      };
 }

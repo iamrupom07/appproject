@@ -58,15 +58,15 @@ class ContactData {
   ContactData._();
 
   static const OfficeInfo office = OfficeInfo(
-    companyName: 'Abroz Machinery Inc.',
+    companyName: 'AB & KBROZ MACHINERY INC.',
     addressLines: [
-      '123 Industrial Blvd,',
-      'Korangi, Karachi 74900,',
-      'Pakistan'
+      'Jose Abad Santos Avenue,',
+      'San Fernando, Pampanga,',
+      'Philippines 2000',
     ],
     email: 'info@abrozmachinery.com',
     website: 'www.abrozmachinery.com',
-    mapsQuery: 'Abroz+Machinery+Korangi+Karachi',
+    mapsQuery: 'Jose+Abad+Santos+Avenue+San+Fernando+Pampanga+Philippines',
     imageUrl:
         'https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=600&q=80',
   );
@@ -84,32 +84,17 @@ class ContactData {
       url: 'https://facebook.com/abrozmachinery',
     ),
     SocialLink(
-      platform: SocialPlatform.instagram,
-      handle: '@abrozmachinery',
-      url: 'https://instagram.com/abrozmachinery',
-    ),
-    SocialLink(
-      platform: SocialPlatform.linkedin,
-      handle: '/abrozmachinery',
-      url: 'https://linkedin.com/company/abrozmachinery',
-    ),
-    SocialLink(
-      platform: SocialPlatform.youtube,
-      handle: '@abrozmachinery',
-      url: 'https://youtube.com/@abrozmachinery',
-    ),
-    SocialLink(
-      platform: SocialPlatform.tiktok,
-      handle: '@abrozmachinery',
-      url: 'https://tiktok.com/@abrozmachinery',
+      platform: SocialPlatform.facebook,
+      handle: '@machinerysparepartsph',
+      url: 'https://www.facebook.com/machinerysparepartsph',
     ),
     SocialLink(
       platform: SocialPlatform.whatsapp,
-      handle: '+92 300 1234567',
-      url: 'https://wa.me/923001234567',
+      handle: '+63 917 510 0030',
+      url: 'https://wa.me/639175100030',
     ),
   ];
 
   static const String messengerUrl = 'https://m.me/abrozmachinery';
-  static const String phoneNumber = 'tel:+923001234567';
+  static const String phoneNumber = 'tel:+639175100030';
 }

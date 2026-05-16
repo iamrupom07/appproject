@@ -5,9 +5,9 @@
 
 enum SortOption {
   relevance('Relevance'),
-  priceLowHigh('Price: Low → High'),
-  priceHighLow('Price: High → Low'),
-  nameAZ('Name: A → Z');
+  nameAZ('Name: A → Z'),
+  nameZA('Name: Z → A'),
+  newest('Newest First');
 
   const SortOption(this.label);
   final String label;
@@ -18,8 +18,8 @@ enum BrandFilter {
   komatsu('Komatsu'),
   cat('CAT'),
   volvo('Volvo'),
-  liebherr('Liebherr'),
-  hitachi('Hitachi');
+  hitachi('Hitachi'),
+  doosan('Doosan');
 
   const BrandFilter(this.label);
   final String label;
@@ -27,8 +27,8 @@ enum BrandFilter {
 
 enum ConditionFilter {
   all('All Conditions'),
-  newMachine('New'),
-  used('Used'),
+  newOem('New – OEM'),
+  used('Used – Good'),
   refurbished('Refurbished');
 
   const ConditionFilter(this.label);

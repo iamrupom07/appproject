@@ -62,21 +62,30 @@ class MachineModel {
 
 enum MachineCategory {
   all('All'),
-  excavators('Excavators'),
-  wheelLoaders('Wheel Loaders'),
-  bulldozers('Bulldozers'),
-  dumpTrucks('Dump Trucks'),
-  graders('Graders'),
-  cranes('Cranes');
+  engineParts('Engine Parts'),
+  hydraulics('Hydraulics'),
+  undercarriage('Undercarriage'),
+  chassis('Chassis'),
+  electrical('Electrical'),
+  groundEngaging('Ground Engaging Tools'),
+  armBoomBucket('Arm/Boom & Bucket'),
+  controlValve('Control Valve / Main Pump'),
+  engineSupport('Engine Support Parts'),
+  hydraulicPump('Hydraulic Pump Spares'),
+  radiator('Radiator'),
+  cabinElectrical('Cabin & Electrical Spares'),
+  swingMotor('Swing Motor'),
+  turnTable('Turn Table'),
+  dozer('Dozer');
 
   const MachineCategory(this.label);
   final String label;
 }
 
 enum StockStatus {
-  inStock('In Stock'),
-  lowStock('Low Stock'),
-  outOfStock('Out of Stock');
+  inStock('Available'),
+  lowStock('Available'),
+  outOfStock('Available');
 
   const StockStatus(this.label);
   final String label;

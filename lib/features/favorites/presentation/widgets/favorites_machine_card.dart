@@ -104,8 +104,11 @@ class FavoritesMachineCard extends ConsumerWidget {
                     Row(
                       children: [
                         Text(
-                          _formatPrice(machine.price),
-                          style: AppTextStyles.priceMedium,
+                          'Price upon request',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 12,
+                          ),
                         ),
                         const Spacer(),
                         ContactButton(
@@ -130,14 +133,6 @@ class FavoritesMachineCard extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  String _formatPrice(double price) {
-    final s = price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-    return '\$$s';
   }
 }
 

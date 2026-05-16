@@ -8,20 +8,27 @@ import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../features/home/domain/machine_model.dart';
 import '../providers/inventory_providers.dart';
 
-/// Horizontally scrollable category chip row.
-/// Reuses [MachineCategory] enum from the home feature.
+/// Horizontally scrollable category chip row for spare parts.
 class InventoryCategoryBar extends ConsumerWidget {
   const InventoryCategoryBar({super.key});
 
-  // Categories shown in the bar (subset + "More" placeholder)
   static const List<MachineCategory> _categories = [
     MachineCategory.all,
-    MachineCategory.excavators,
-    MachineCategory.wheelLoaders,
-    MachineCategory.bulldozers,
-    MachineCategory.dumpTrucks,
-    MachineCategory.graders,
-    MachineCategory.cranes,
+    MachineCategory.engineParts,
+    MachineCategory.hydraulics,
+    MachineCategory.undercarriage,
+    MachineCategory.chassis,
+    MachineCategory.electrical,
+    MachineCategory.groundEngaging,
+    MachineCategory.armBoomBucket,
+    MachineCategory.controlValve,
+    MachineCategory.engineSupport,
+    MachineCategory.hydraulicPump,
+    MachineCategory.radiator,
+    MachineCategory.cabinElectrical,
+    MachineCategory.swingMotor,
+    MachineCategory.turnTable,
+    MachineCategory.dozer,
   ];
 
   @override
@@ -110,11 +117,20 @@ class _CategoryChip extends StatelessWidget {
 
   IconData _iconFor(MachineCategory cat) => switch (cat) {
         MachineCategory.all => Icons.grid_view_rounded,
-        MachineCategory.excavators => Icons.precision_manufacturing_rounded,
-        MachineCategory.wheelLoaders => Icons.agriculture_rounded,
-        MachineCategory.bulldozers => Icons.construction_rounded,
-        MachineCategory.dumpTrucks => Icons.local_shipping_rounded,
-        MachineCategory.graders => Icons.straighten_rounded,
-        MachineCategory.cranes => Icons.account_tree_rounded,
+        MachineCategory.engineParts => Icons.settings_rounded,
+        MachineCategory.hydraulics => Icons.water_rounded,
+        MachineCategory.undercarriage => Icons.layers_rounded,
+        MachineCategory.chassis => Icons.architecture_rounded,
+        MachineCategory.electrical => Icons.electrical_services_rounded,
+        MachineCategory.groundEngaging => Icons.hardware_rounded,
+        MachineCategory.armBoomBucket => Icons.precision_manufacturing_rounded,
+        MachineCategory.controlValve => Icons.tune_rounded,
+        MachineCategory.engineSupport => Icons.support_rounded,
+        MachineCategory.hydraulicPump => Icons.compress_rounded,
+        MachineCategory.radiator => Icons.device_thermostat_rounded,
+        MachineCategory.cabinElectrical => Icons.cabin_rounded,
+        MachineCategory.swingMotor => Icons.rotate_right_rounded,
+        MachineCategory.turnTable => Icons.sync_rounded,
+        MachineCategory.dozer => Icons.construction_rounded,
       };
 }

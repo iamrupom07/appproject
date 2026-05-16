@@ -546,8 +546,11 @@ class _ResultTile extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        _formatPrice(machine.price),
-                        style: AppTextStyles.priceSmall,
+                        'Price upon request',
+                        style: AppTextStyles.bodySmall.copyWith(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 11,
+                        ),
                       ),
                       const SizedBox(width: AppSizes.spaceSm),
                       StockBadge(status: machine.status),
@@ -566,13 +569,6 @@ class _ResultTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatPrice(double price) {
-    final s = price
-        .toStringAsFixed(0)
-        .replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},');
-    return '\$$s';
   }
 }
 

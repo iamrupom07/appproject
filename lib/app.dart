@@ -9,7 +9,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'AB & Abroz Machinery',
+      title: 'Abroz Parts+',
       theme: AppTheme.lightTheme,
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,

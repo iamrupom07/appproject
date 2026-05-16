@@ -78,19 +78,24 @@ class InventoryMachineCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // ── Specs row ────────────────────────────────────────────
-                  _SpecsRow(machine: machine),
+                  // ── Part info row ─────────────────────────────────────
+                  _PartInfoRow(machine: machine),
 
                   const SizedBox(height: 10),
 
-                  // ── Price + Contact ──────────────────────────────────────
+                  // ── Inquire + Contact ────────────────────────────────────
                   Row(
                     children: [
-                      Text(
-                        _formatPrice(machine.price),
-                        style: AppTextStyles.priceSmall,
+                      Expanded(
+                        child: Text(
+                          'Price upon request',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            fontSize: 11,
+                            fontStyle: FontStyle.italic,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
                       ),
-                      const Spacer(),
                       ContactButton(
                         onTap: () {/* navigate to contact */},
                         height: 30,
@@ -107,14 +112,8 @@ class InventoryMachineCard extends ConsumerWidget {
     );
   }
 
-  String _formatPrice(double price) {
-    final s = price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-    return '\$$s';
-  }
-}
+
+
 
 // ─── Card Image with overlays ─────────────────────────────────────────────────
 
@@ -199,39 +198,36 @@ class _CardImage extends StatelessWidget {
   }
 }
 
-// ─── Specs Row ────────────────────────────────────────────────────────────────
+// ─── Part Info Row ────────────────────────────────────────────────────────────
 
-class _SpecsRow extends StatelessWidget {
-  const _SpecsRow({required this.machine});
+class _PartInfoRow extends StatelessWidget {
+  const _PartInfoRow({required this.machine});
 
   final InventoryMachineModel machine;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: _SpecItem(
-            icon: Icons.fitness_center_rounded,
-            value: machine.formattedWeight,
-            label: 'Operating Weight',
-          ),
+        _InfoItem(
+          icon: Icons.tag_rounded,
+          value: machine.partNumber,
+          label: 'Part No.',
         ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: _SpecItem(
-            icon: Icons.water_rounded,
-            value: machine.formattedCapacity,
-            label: machine.capacityLabel,
-          ),
+        const SizedBox(height: 4),
+        _InfoItem(
+          icon: Icons.settings_rounded,
+          value: machine.compatibility,
+          label: 'Compatible',
         ),
       ],
     );
   }
 }
 
-class _SpecItem extends StatelessWidget {
-  const _SpecItem({
+class _InfoItem extends StatelessWidget {
+  const _InfoItem({
     required this.icon,
     required this.value,
     required this.label,
@@ -259,12 +255,12 @@ class _SpecItem extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   fontSize: 11,
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               Text(
                 label,
                 style: AppTextStyles.labelSmall.copyWith(fontSize: 9.5),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

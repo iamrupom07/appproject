@@ -1,28 +1,27 @@
 import '../../home/domain/machine_model.dart';
 
-/// Extends [MachineModel] with inventory-specific display fields.
-/// The base [MachineModel] stays clean; specs live here.
+/// Extends [MachineModel] with spare-parts-specific display fields.
 class InventoryMachineModel {
   const InventoryMachineModel({
     required this.machine,
-    required this.operatingWeightKg,
-    required this.capacityM3,
-    required this.capacityLabel,
+    required this.partNumber,
+    required this.compatibility,
+    required this.condition,
     this.totalImages = 1,
   });
 
   final MachineModel machine;
 
-  /// e.g. 22200
-  final int operatingWeightKg;
+  /// e.g. 'KOM-SA6D102-001'
+  final String partNumber;
 
-  /// e.g. 1.0
-  final double capacityM3;
+  /// e.g. 'PC200-8, PC210LC-8'
+  final String compatibility;
 
-  /// e.g. 'Bucket Capacity' or 'Blade Capacity'
-  final String capacityLabel;
+  /// e.g. 'Used – Good' / 'New – OEM' / 'Refurbished'
+  final String condition;
 
-  /// Total photos in this machine's gallery (shown as "1/N" on image)
+  /// Total photos in this part's gallery (shown as "1/N" on image)
   final int totalImages;
 
   // ── Convenience pass-throughs ──────────────────────────────────────────────
@@ -33,15 +32,6 @@ class InventoryMachineModel {
   double get price => machine.price;
   StockStatus get status => machine.status;
   String get imageUrl => machine.imageUrl;
-
-  String get formattedWeight {
-    final s = operatingWeightKg
-        .toString()
-        .replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]},');
-    return '$s kg';
-  }
-
-  String get formattedCapacity => '${capacityM3.toStringAsFixed(1)} m\u00B3';
 
   @override
   bool operator ==(Object other) =>

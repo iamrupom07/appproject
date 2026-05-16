@@ -112,8 +112,12 @@ class InventoryListCard extends ConsumerWidget {
                     Row(
                       children: [
                         Text(
-                          _formatPrice(machine.price),
-                          style: AppTextStyles.priceSmall,
+                          'Price upon request',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            fontSize: 11,
+                            fontStyle: FontStyle.italic,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         const Spacer(),
                         ContactButton(
@@ -131,15 +135,6 @@ class InventoryListCard extends ConsumerWidget {
       ),
     );
   }
-
-  String _formatPrice(double price) {
-    final s = price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-    return '\$$s';
-  }
-}
 
 class _FavoriteHeart extends StatelessWidget {
   const _FavoriteHeart({required this.isFav, required this.onTap});

@@ -125,7 +125,7 @@ class _ContactSheet extends StatelessWidget {
                 icon: Icons.phone_rounded,
                 iconBg: AppColors.inStock,
                 label: 'Call Us Now',
-                sublabel: '+92 300 1234567',
+                sublabel: '+63 917 510 0030',
                 onTap: () => _call(context),
               ),
               const SizedBox(height: AppSizes.spaceSm),

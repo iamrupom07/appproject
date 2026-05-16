@@ -85,8 +85,12 @@ class MachineGridCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _formatPrice(machine.price),
-                    style: AppTextStyles.priceSmall,
+                    'Price upon request',
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontSize: 11,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -112,14 +116,6 @@ class MachineGridCard extends ConsumerWidget {
     );
   }
 
-  String _formatPrice(double price) {
-    final formatted = price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-    return '\$$formatted';
-  }
-}
 
 // ─── Card Image ───────────────────────────────────────────────────────────────
 

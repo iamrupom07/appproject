@@ -192,29 +192,29 @@ class _CategoryData {
 
 const List<_CategoryData> _categories = [
   _CategoryData(
-    category: MachineCategory.excavators,
-    label: 'Excavators',
-    icon: Icons.construction_rounded,
+    category: MachineCategory.engineParts,
+    label: 'Engine\nParts',
+    icon: Icons.settings_rounded,
   ),
   _CategoryData(
-    category: MachineCategory.wheelLoaders,
-    label: 'Wheel\nLoaders',
-    icon: Icons.agriculture_rounded,
+    category: MachineCategory.hydraulics,
+    label: 'Hydraulics',
+    icon: Icons.water_rounded,
   ),
   _CategoryData(
-    category: MachineCategory.bulldozers,
-    label: 'Bulldozers',
-    icon: Icons.foundation_rounded,
+    category: MachineCategory.undercarriage,
+    label: 'Under-\ncarriage',
+    icon: Icons.layers_rounded,
   ),
   _CategoryData(
-    category: MachineCategory.cranes,
-    label: 'Cranes',
-    icon: Icons.precision_manufacturing_rounded,
+    category: MachineCategory.groundEngaging,
+    label: 'Ground\nEngaging',
+    icon: Icons.hardware_rounded,
   ),
   _CategoryData(
-    category: MachineCategory.dumpTrucks,
-    label: 'New\nArrivals',
-    icon: Icons.fiber_new_rounded,
+    category: MachineCategory.electrical,
+    label: 'Electrical',
+    icon: Icons.electrical_services_rounded,
     isNew: true,
   ),
 ];

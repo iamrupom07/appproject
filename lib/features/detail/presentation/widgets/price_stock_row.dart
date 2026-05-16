@@ -31,8 +31,8 @@ class PriceStockRow extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              _formatPrice(price),
-              style: AppTextStyles.priceLarge,
+              'Available upon request',
+              style: AppTextStyles.priceLarge.copyWith(fontSize: 18),
             ),
           ],
         ),
@@ -40,14 +40,6 @@ class PriceStockRow extends StatelessWidget {
         _StockPill(status: status),
       ],
     );
-  }
-
-  String _formatPrice(double price) {
-    final formatted = price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-    return '\$$formatted';
   }
 }
 
@@ -109,9 +101,5 @@ class _StockPill extends StatelessWidget {
     );
   }
 
-  static Color _color(StockStatus s) => switch (s) {
-        StockStatus.inStock => AppColors.inStock,
-        StockStatus.lowStock => AppColors.lowStock,
-        StockStatus.outOfStock => AppColors.outOfStock,
-      };
+  static Color _color(StockStatus s) => AppColors.inStock;
 }

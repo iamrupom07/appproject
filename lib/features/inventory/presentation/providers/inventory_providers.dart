@@ -101,13 +101,15 @@ final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
 
   // ── Sort ──────────────────────────────────────────────────────────────────
   switch (filters.sort) {
-    case SortOption.priceLowHigh:
-      list = [...list]..sort((a, b) => a.price.compareTo(b.price));
-    case SortOption.priceHighLow:
-      list = [...list]..sort((a, b) => b.price.compareTo(a.price));
     case SortOption.nameAZ:
       list = [...list]
         ..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    case SortOption.nameZA:
+      list = [...list]
+        ..sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+    case SortOption.newest:
+      // newest first — reverse insertion order (mock data is already newest last)
+      list = list.reversed.toList();
     case SortOption.relevance:
       break;
   }

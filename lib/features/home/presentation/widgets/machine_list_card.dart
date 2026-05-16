@@ -61,8 +61,11 @@ class MachineListCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: AppSizes.spaceXs),
                     Text(
-                      _formatPrice(machine.price),
-                      style: AppTextStyles.priceMedium,
+                      'Price upon request',
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
@@ -92,14 +95,6 @@ class MachineListCard extends ConsumerWidget {
     );
   }
 
-  String _formatPrice(double price) {
-    final formatted = price.toStringAsFixed(0).replaceAllMapped(
-          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-    return '\$ $formatted';
-  }
-}
 
 // ─── Machine Image ─────────────────────────────────────────────────────────────
 
