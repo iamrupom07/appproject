@@ -94,3 +94,45 @@ final recentlyAddedProvider = Provider<List<MachineModel>>((ref) {
       .take(3)
       .toList();
 });
+
+// ─── Favorites Screen Providers ───────────────────────────────────────────────
+
+/// Sort options available on the Favorites screen.
+enum FavoritesSort {
+  recent('Recently Added'),
+  priceAsc('Price: Low to High'),
+  priceDesc('Price: High to Low'),
+  category('Category');
+
+  const FavoritesSort(this.label);
+  final String label;
+}
+
+/// Persists the currently selected sort order for the Favorites screen.
+final favoritesSortProvider =
+    StateProvider<FavoritesSort>((ref) => FavoritesSort.recent);
+
+/// Derives the full [MachineModel] list from the saved ID set, then applies
+/// the selected sort. Recomputes automatically whenever favorites or sort changes.
+final favoritedMachinesProvider = Provider<List<MachineModel>>((ref) {
+  final ids = ref.watch(favoritesProvider);
+  final all = ref.watch(allMachinesProvider);
+  final sort = ref.watch(favoritesSortProvider);
+
+  // Preserve insertion order by filtering all machines
+  var list = all.where((m) => ids.contains(m.id)).toList();
+
+  switch (sort) {
+    case FavoritesSort.recent:
+      // Keep natural insertion order (no-op; ids is a Set so order tracks adds)
+      break;
+    case FavoritesSort.priceAsc:
+      list.sort((a, b) => a.price.compareTo(b.price));
+    case FavoritesSort.priceDesc:
+      list.sort((a, b) => b.price.compareTo(a.price));
+    case FavoritesSort.category:
+      list.sort((a, b) => a.category.label.compareTo(b.category.label));
+  }
+
+  return list;
+});

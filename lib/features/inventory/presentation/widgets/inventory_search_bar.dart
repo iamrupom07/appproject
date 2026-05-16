@@ -64,7 +64,8 @@ class _InventorySearchBarState extends ConsumerState<InventorySearchBar> {
               size: 20,
             ),
           ),
-          prefixIconConstraints: const BoxConstraints(),
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 46, minHeight: 46),
           suffixIcon: ValueListenableBuilder(
             valueListenable: _controller,
             builder: (_, value, __) => value.text.isNotEmpty
@@ -84,7 +85,7 @@ class _InventorySearchBarState extends ConsumerState<InventorySearchBar> {
           ),
           border: InputBorder.none,
           contentPadding:
-              const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+              const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         ),
       ),
     );

@@ -135,7 +135,7 @@ class _CardImage extends StatelessWidget {
       children: [
         // ── Machine image ──────────────────────────────────────────────────
         AspectRatio(
-          aspectRatio: 4 / 3,
+          aspectRatio: 16 / 9,
           child: CachedNetworkImage(
             imageUrl: machine.imageUrl,
             fit: BoxFit.cover,

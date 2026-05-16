@@ -132,7 +132,7 @@ class InventoryScreen extends ConsumerWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: AppSizes.spaceMd,
                         mainAxisSpacing: AppSizes.spaceMd,
-                        childAspectRatio: 0.72,
+                        childAspectRatio: 0.68,
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) => InventoryMachineCard(
@@ -171,7 +171,7 @@ class InventoryScreen extends ConsumerWidget {
             Positioned(
               left: 0,
               right: 0,
-              bottom: MediaQuery.of(context).padding.bottom,
+              bottom: 0,
               child: const InventoryBottomBar(),
             ),
           ],

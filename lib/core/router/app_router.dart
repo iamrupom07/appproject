@@ -1,3 +1,5 @@
+import 'package:ab_abroz_inventory/features/contact/presentation/contact_screen.dart';
+import 'package:ab_abroz_inventory/features/favorites/presentation/favorites_screen.dart';
 import 'package:ab_abroz_inventory/features/home/presentation/onboarding_screen.dart';
 import 'package:ab_abroz_inventory/features/home/presentation/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,13 +43,11 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/favorites',
-          builder: (context, state) =>
-              const _PlaceholderScreen(title: 'Favorites'),
+          builder: (context, state) => const FavoritesScreen(),
         ),
         GoRoute(
           path: '/contact',
-          builder: (context, state) =>
-              const _PlaceholderScreen(title: 'Contact'),
+          builder: (context, state) => const ContactScreen(),
         ),
         GoRoute(
           path: '/profile',
