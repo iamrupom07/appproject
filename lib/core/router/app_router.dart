@@ -7,9 +7,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/detail/presentation/product_detail_screen.dart';
 import '../../features/inventory/presentation/inventory_screen.dart';
-
+import '../../features/search/presentation/search_screen.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
+import '../../core/widgets/floating_contact_button.dart';
 import '../../features/home/presentation/home_screen.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -52,9 +53,15 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/profile',
           builder: (context, state) =>
-              const _PlaceholderScreen(title: 'Profile'),
+              const _PlaceholderScreen(title: 'Login coming soon'),
         ),
       ],
+    ),
+
+    // ── Search ────────────────────────────────────────────────────────────────
+    GoRoute(
+      path: '/search',
+      builder: (context, state) => const SearchScreen(),
     ),
 
     // ── Item Detail ───────────────────────────────────────────────────────────
@@ -97,6 +104,8 @@ class _AppShell extends StatelessWidget {
 
     return Scaffold(
       body: child,
+      floatingActionButton: const FloatingContactButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: _AppBottomNavBar(
         currentIndex: currentIndex,
         onTap: (index) => context.go(_tabRoutes[index]),
@@ -170,9 +179,9 @@ class _AppBottomNavBar extends StatelessWidget {
               _NavItem(
                 index: 4,
                 currentIndex: currentIndex,
-                icon: Icons.person_rounded,
-                outlinedIcon: Icons.person_outline_rounded,
-                label: 'Profile',
+                icon: Icons.lock_rounded,
+                outlinedIcon: Icons.lock_outline_rounded,
+                label: 'Login',
                 onTap: onTap,
               ),
             ],

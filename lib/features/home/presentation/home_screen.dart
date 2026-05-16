@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/constants/app_text_styles.dart';
 import 'providers/home_providers.dart';
 import 'widgets/category_tab_row.dart';
 import 'widgets/featured_banner_carousel.dart';
@@ -39,6 +41,49 @@ class HomeScreen extends ConsumerWidget {
               avatarUrl: 'https://i.pravatar.cc/150?img=11',
             ),
           ),
+          const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceMd)),
+
+          // ── Tappable search bar → navigates to /search ─────────────────
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
+              child: GestureDetector(
+                onTap: () => context.push('/search'),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppColors.cardBackground,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusPill),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: AppSizes.spaceMd),
+                      const Icon(
+                        Icons.search_rounded,
+                        color: AppColors.textSecondary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: AppSizes.spaceSm),
+                      Text(
+                        'Search machinery, model, brand...',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),
           SliverToBoxAdapter(
             child: FeaturedBannerCarousel(machines: featured),
@@ -49,7 +94,7 @@ class HomeScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: SectionHeader(
               title: 'Trending Inventory',
-              onSeeAll: () {},
+              onSeeAll: () => context.go('/inventory'),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceMd)),
@@ -58,9 +103,11 @@ class HomeScreen extends ConsumerWidget {
               height: 248,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
                 itemCount: trending.length,
-                separatorBuilder: (_, __) => const SizedBox(width: AppSizes.spaceSm),
+                separatorBuilder: (_, __) =>
+                    const SizedBox(width: AppSizes.spaceSm),
                 itemBuilder: (_, index) => SizedBox(
                   width: 160,
                   child: MachineGridCard(machine: trending[index]),
@@ -72,7 +119,7 @@ class HomeScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: SectionHeader(
               title: 'Recently Added',
-              onSeeAll: () {},
+              onSeeAll: () => context.go('/inventory'),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceMd)),
@@ -81,9 +128,11 @@ class HomeScreen extends ConsumerWidget {
               height: 160,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
                 itemCount: recentlyAdded.length,
-                separatorBuilder: (_, __) => const SizedBox(width: AppSizes.spaceSm),
+                separatorBuilder: (_, __) =>
+                    const SizedBox(width: AppSizes.spaceSm),
                 itemBuilder: (_, index) => SizedBox(
                   width: 180,
                   child: RecentlyAddedCard(machine: recentlyAdded[index]),

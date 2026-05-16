@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../../core/widgets/contact_button.dart';
 import '../../../../../core/widgets/stock_badge.dart';
-import '../../../../home/domain/machine_model.dart';
-import '../../../../home/presentation/providers/home_providers.dart';
+import '../../../home/domain/machine_model.dart';
+import '../../../home/presentation/providers/home_providers.dart';
+import '../../../contact/domain/contact_model.dart';
 
 /// Full-width horizontal list card used on the Favorites screen.
 ///
@@ -107,7 +109,15 @@ class FavoritesMachineCard extends ConsumerWidget {
                         ),
                         const Spacer(),
                         ContactButton(
-                          onTap: () {/* navigate to contact */},
+                          onTap: () async {
+                            final uri = Uri.parse(ContactData.messengerUrl);
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(
+                                uri,
+                                mode: LaunchMode.externalApplication,
+                              );
+                            }
+                          },
                           height: 30,
                         ),
                       ],

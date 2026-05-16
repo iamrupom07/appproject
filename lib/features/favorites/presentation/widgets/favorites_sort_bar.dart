@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
-import '../../../../home/presentation/providers/home_providers.dart';
+import '../../../home/presentation/providers/home_providers.dart';
 
 /// Horizontally scrollable sort-chip row for the Favorites screen.
 /// Uses the same pill-chip visual pattern as [InventoryCategoryBar].
