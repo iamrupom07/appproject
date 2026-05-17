@@ -144,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen>
                     scale: _logoScale,
                     child: Image.asset(
                       'assets/icons/app_icon.png',
-                      width: size.width * 0.42, // smaller: 42% of screen
+                      width: size.width * 0.55,
                       fit: BoxFit.contain,
                     ),
                   ),
