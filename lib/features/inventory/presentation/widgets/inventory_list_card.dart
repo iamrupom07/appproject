@@ -1,4 +1,4 @@
-import 'package:ab_abroz_inventory/features/home/presentation/providers/home_providers.dart';
+import 'package:abroz_parts_plus/features/home/presentation/providers/home_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -135,6 +135,7 @@ class InventoryListCard extends ConsumerWidget {
       ),
     );
   }
+}
 
 class _FavoriteHeart extends StatelessWidget {
   const _FavoriteHeart({required this.isFav, required this.onTap});

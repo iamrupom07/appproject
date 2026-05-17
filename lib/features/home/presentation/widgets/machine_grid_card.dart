@@ -39,7 +39,7 @@ class MachineGridCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -115,7 +115,7 @@ class MachineGridCard extends ConsumerWidget {
       ),
     );
   }
-
+}
 
 // ─── Card Image ───────────────────────────────────────────────────────────────
 
@@ -216,7 +216,7 @@ class _FavoriteHeart extends StatelessWidget {
         width: 30,
         height: 30,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.35),
+          color: Colors.black.withValues(alpha: 0.35),
           shape: BoxShape.circle,
         ),
         child: AnimatedSwitcher(

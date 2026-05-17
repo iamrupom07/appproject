@@ -71,12 +71,16 @@ class HomeScreen extends ConsumerWidget {
                         size: 20,
                       ),
                       const SizedBox(width: AppSizes.spaceSm),
-                      Text(
-                        'Search machinery, model, brand...',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
+                      Expanded(
+                        child: Text(
+                          'Search machinery, model, brand...',
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      const SizedBox(width: AppSizes.spaceMd),
                     ],
                   ),
                 ),
@@ -141,7 +145,11 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: AppSizes.spaceLg + AppSizes.navBarHeight),
+            child: SizedBox(
+              height: AppSizes.spaceLg +
+                  AppSizes.navBarHeight +
+                  MediaQuery.of(context).padding.bottom,
+            ),
           ),
         ],
       ),

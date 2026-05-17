@@ -144,3 +144,42 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
         'Used in good condition. Wear within acceptable limits. Inspection report available.',
   ),
 };
+
+/// Returns a generic fallback [MachineDetailModel] for any id not found in
+/// [kMockMachineDetails]. This prevents a null-dereference when an unknown
+/// id is navigated to during development.
+MachineDetailModel fallbackDetail(String id) => MachineDetailModel(
+      id: id,
+      totalImages: 1,
+      has3DView: false,
+      galleryUrls: [
+        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+      ],
+      specs: [
+        const MachineSpec(
+            label: 'Part Number', value: 'N/A', iconAsset: 'weight'),
+        const MachineSpec(
+            label: 'Condition', value: 'Unknown', iconAsset: 'shield'),
+        const MachineSpec(
+            label: 'Compatible', value: 'N/A', iconAsset: 'bucket'),
+        const MachineSpec(
+            label: 'Category', value: 'General', iconAsset: 'power'),
+      ],
+      techDetails: [
+        const TechDetail(
+            label: 'Part Number', value: 'N/A', iconAsset: 'engine'),
+        const TechDetail(
+            label: 'Compatibility', value: 'N/A', iconAsset: 'weight'),
+        const TechDetail(
+            label: 'Condition', value: 'Unknown', iconAsset: 'shield'),
+        const TechDetail(
+            label: 'Category', value: 'General', iconAsset: 'bucket'),
+        const TechDetail(label: 'Origin', value: 'N/A', iconAsset: 'calendar'),
+        const TechDetail(
+            label: 'Price', value: 'Upon Request', iconAsset: 'clock'),
+      ],
+      description: 'No details available for this item.',
+      features: '• Details coming soon',
+      shippingInfo: 'Contact us for shipping information.',
+      conditionNotes: 'Condition details not available.',
+    );

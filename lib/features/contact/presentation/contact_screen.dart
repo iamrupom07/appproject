@@ -92,6 +92,14 @@ class ContactScreen extends StatelessWidget {
                       primaryUrl: ContactData.socialLinks
                           .firstWhere(
                             (l) => l.platform == SocialPlatform.instagram,
+                            orElse: () => ContactData.socialLinks.firstWhere(
+                              (l) => l.platform == SocialPlatform.facebook,
+                              orElse: () => const SocialLink(
+                                platform: SocialPlatform.facebook,
+                                handle: '',
+                                url: ContactData.messengerUrl,
+                              ),
+                            ),
                           )
                           .url,
                     ),

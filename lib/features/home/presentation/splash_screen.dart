@@ -5,16 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
-import 'widgets/animated_logo.dart';
 import 'widgets/loading_bar.dart';
 
-/// Splash / launch screen for ABROZ Machinery.
-///
-/// Flow:
-///   1. Sets dark system UI overlay for full immersion.
-///   2. Shows animated logo (fade + slide up) after a short delay.
-///   3. Shows hero excavator illustration fading in.
-///   4. Loading bar fills over ~2.8 s, then navigates to /home.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -24,11 +16,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
-  late final AnimationController _heroController;
+  late final AnimationController _logoController;
+  late final AnimationController _textController;
   late final AnimationController _taglineController;
 
-  late final Animation<double> _heroOpacity;
-  late final Animation<double> _heroScale;
+  late final Animation<double> _logoOpacity;
+  late final Animation<double> _logoScale;
+  late final Animation<double> _textOpacity;
+  late final Animation<Offset> _textSlide;
   late final Animation<double> _taglineOpacity;
   late final Animation<Offset> _taglineSlide;
 
@@ -36,7 +31,6 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Force dark status/nav bar for the splash
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -46,32 +40,44 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
 
-    // Hero excavator image animation
-    _heroController = AnimationController(
+    // Logo animation
+    _logoController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 900),
     );
-
-    _heroOpacity = CurvedAnimation(
-      parent: _heroController,
+    _logoOpacity = CurvedAnimation(
+      parent: _logoController,
       curve: Curves.easeOut,
     );
+    _logoScale = Tween<double>(begin: 0.85, end: 1.0).animate(
+      CurvedAnimation(parent: _logoController, curve: Curves.easeOutCubic),
+    );
 
-    _heroScale = Tween<double>(begin: 1.06, end: 1.0).animate(
-      CurvedAnimation(parent: _heroController, curve: Curves.easeOutCubic),
+    // App name animation
+    _textController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+    _textOpacity = CurvedAnimation(
+      parent: _textController,
+      curve: Curves.easeOut,
+    );
+    _textSlide = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(parent: _textController, curve: Curves.easeOutCubic),
     );
 
     // Tagline animation
     _taglineController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 600),
     );
-
     _taglineOpacity = CurvedAnimation(
       parent: _taglineController,
       curve: Curves.easeOut,
     );
-
     _taglineSlide = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -79,22 +85,23 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _taglineController, curve: Curves.easeOutCubic),
     );
 
-    // Stagger the entrance animations
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (mounted) _heroController.forward();
+    // Stagger entrances
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (mounted) _logoController.forward();
     });
-
-    Future.delayed(const Duration(milliseconds: 800), () {
+    Future.delayed(const Duration(milliseconds: 700), () {
+      if (mounted) _textController.forward();
+    });
+    Future.delayed(const Duration(milliseconds: 950), () {
       if (mounted) _taglineController.forward();
     });
   }
 
   @override
   void dispose() {
-    _heroController.dispose();
+    _logoController.dispose();
+    _textController.dispose();
     _taglineController.dispose();
-
-    // Restore default system UI when leaving splash
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -103,7 +110,6 @@ class _SplashScreenState extends State<SplashScreen>
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
-
     super.dispose();
   }
 
@@ -121,58 +127,128 @@ class _SplashScreenState extends State<SplashScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // ── Background gradient + atmospheric glow ──────────────────
+          // ── Dark background with amber glow ─────────────────────────
           _SplashBackground(screenHeight: size.height),
 
-          // ── Hero excavator image (bottom half) ──────────────────────
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: size.height * 0.52,
-            child: _HeroImage(
-              opacity: _heroOpacity,
-              scale: _heroScale,
-            ),
-          ),
-
-          // ── Dark vignette over the bottom ───────────────────────────
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: size.height * 0.38,
-            child: const _BottomVignette(),
-          ),
-
-          // ── Main content column ─────────────────────────────────────
+          // ── Content ─────────────────────────────────────────────────
           SafeArea(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Top spacer — pushes logo to vertical center-ish
-                SizedBox(height: size.height * 0.1),
+                const Spacer(flex: 3),
 
-                // Animated brand logo
-                const AnimatedLogo(
-                  animate: true,
-                  delay: Duration(milliseconds: 100),
-                  logoSize: 84,
-                  wordmarkFontSize: 38,
-                  subbrandFontSize: 11.5,
+                // ── Logo icon — smaller, tighter ──────────────────────
+                FadeTransition(
+                  opacity: _logoOpacity,
+                  child: ScaleTransition(
+                    scale: _logoScale,
+                    child: Image.asset(
+                      'assets/icons/app_icon.png',
+                      width: size.width * 0.42, // smaller: 42% of screen
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
 
-                const Spacer(),
+                const SizedBox(height: AppSizes.spaceLg),
 
-                // Tagline block
-                _TaglineBlock(
+                // ── App name: Abroz Parts+ ────────────────────────────
+                FadeTransition(
+                  opacity: _textOpacity,
+                  child: SlideTransition(
+                    position: _textSlide,
+                    child: RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.outfit(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: 0.5,
+                        ),
+                        children: [
+                          const TextSpan(text: 'Abroz '),
+                          TextSpan(
+                            text: 'Parts',
+                            style: GoogleFonts.outfit(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '+',
+                            style: GoogleFonts.outfit(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.gold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: AppSizes.spaceSm),
+
+                // ── Tagline ───────────────────────────────────────────
+                FadeTransition(
                   opacity: _taglineOpacity,
-                  slide: _taglineSlide,
+                  child: SlideTransition(
+                    position: _taglineSlide,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Quality Used Heavy Machinery',
+                          style: GoogleFonts.outfit(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white.withValues(alpha: 0.65),
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Komatsu Specialist',
+                          style: GoogleFonts.outfit(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.gold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
 
-                SizedBox(height: AppSizes.spaceLg),
+                const Spacer(flex: 3),
 
-                // Loading bar + label
-                _LoadingSection(onComplete: _onLoadComplete),
+                // ── Loading bar ───────────────────────────────────────
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppSizes.spaceXl),
+                  child: Column(
+                    children: [
+                      LoadingBar(
+                        duration: const Duration(milliseconds: 2800),
+                        color: AppColors.gold,
+                        height: 3,
+                        onComplete: _onLoadComplete,
+                      ),
+                      const SizedBox(height: AppSizes.spaceSm + 2),
+                      Text(
+                        'Loading experience...',
+                        style: GoogleFonts.inter(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white.withValues(alpha: 0.35),
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
                 SizedBox(height: AppSizes.spaceLg + 4),
               ],
@@ -184,12 +260,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Sub-widgets (private, file-scoped)
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Background ───────────────────────────────────────────────────────────────
 
-/// Full-screen dark background with a warm amber radial glow near the top
-/// (behind the logo) and a cooler subtle gradient overall.
 class _SplashBackground extends StatelessWidget {
   const _SplashBackground({required this.screenHeight});
   final double screenHeight;
@@ -199,7 +271,6 @@ class _SplashBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Base gradient — dark charcoal to near-black
         Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -214,192 +285,25 @@ class _SplashBackground extends StatelessWidget {
             ),
           ),
         ),
-
-        // Warm amber glow behind logo area
-        Positioned(
-          top: -screenHeight * 0.05,
-          left: 0,
-          right: 0,
-          child: Center(
-            child: Container(
-              width: 340,
-              height: 340,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    AppColors.gold.withOpacity(0.12),
-                    AppColors.gold.withOpacity(0.04),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.5, 1.0],
-                ),
+        // Subtle amber glow behind logo
+        Center(
+          child: Container(
+            width: 280,
+            height: 280,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  AppColors.gold.withValues(alpha: 0.10),
+                  AppColors.gold.withValues(alpha: 0.03),
+                  Colors.transparent,
+                ],
+                stops: const [0.0, 0.5, 1.0],
               ),
             ),
           ),
         ),
       ],
-    );
-  }
-}
-
-/// Fading, very-slightly-scaling excavator hero image.
-/// Uses a network image placeholder — swap the URL for your asset.
-class _HeroImage extends StatelessWidget {
-  const _HeroImage({
-    required this.opacity,
-    required this.scale,
-  });
-
-  final Animation<double> opacity;
-  final Animation<double> scale;
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: opacity,
-      child: ScaleTransition(
-        scale: scale,
-        alignment: Alignment.bottomCenter,
-        child: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Colors.white, Colors.white],
-            stops: [0.0, 0.22, 1.0],
-          ).createShader(bounds),
-          blendMode: BlendMode.dstIn,
-          child: Image.network(
-            // Replace with AssetImage once you add your own excavator asset.
-            // e.g., Image.asset('assets/images/excavator_hero.png')
-            'https://images.unsplash.com/photo-1581093804475-577d72e35330?w=800&q=80',
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-            errorBuilder: (context, error, stackTrace) =>
-                const _ExcavatorPlaceholder(),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Shown if the network image fails to load.
-class _ExcavatorPlaceholder extends StatelessWidget {
-  const _ExcavatorPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF252528),
-      child: Center(
-        child: Icon(
-          Icons.construction_rounded,
-          size: 120,
-          color: AppColors.gold.withOpacity(0.25),
-        ),
-      ),
-    );
-  }
-}
-
-/// Gradient vignette that fades the bottom of the hero image into the bg.
-class _BottomVignette extends StatelessWidget {
-  const _BottomVignette();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.transparent,
-            AppColors.darkBackground.withOpacity(0.7),
-            AppColors.darkBackground,
-          ],
-          stops: const [0.0, 0.55, 1.0],
-        ),
-      ),
-    );
-  }
-}
-
-/// "Premium Heavy Equipment / Marketplace" tagline.
-class _TaglineBlock extends StatelessWidget {
-  const _TaglineBlock({
-    required this.opacity,
-    required this.slide,
-  });
-
-  final Animation<double> opacity;
-  final Animation<Offset> slide;
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: opacity,
-      child: SlideTransition(
-        position: slide,
-        child: Column(
-          children: [
-            Text(
-              'Premium Heavy Equipment',
-              style: GoogleFonts.outfit(
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                color: Colors.white.withOpacity(0.82),
-                letterSpacing: 0.3,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              'Marketplace',
-              style: GoogleFonts.outfit(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: AppColors.gold,
-                letterSpacing: 0.5,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Loading bar + "Loading experience…" label.
-class _LoadingSection extends StatelessWidget {
-  const _LoadingSection({required this.onComplete});
-
-  final VoidCallback onComplete;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceXl),
-      child: Column(
-        children: [
-          LoadingBar(
-            duration: const Duration(milliseconds: 2800),
-            color: AppColors.gold,
-            height: 3,
-            onComplete: onComplete,
-          ),
-          const SizedBox(height: AppSizes.spaceSm + 2),
-          Text(
-            'Loading experience...',
-            style: GoogleFonts.inter(
-              fontSize: 11,
-              fontWeight: FontWeight.w400,
-              color: Colors.white.withOpacity(0.38),
-              letterSpacing: 0.2,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

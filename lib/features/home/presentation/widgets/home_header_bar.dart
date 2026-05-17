@@ -95,7 +95,7 @@ class _CircleIconButton extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -143,7 +143,7 @@ class _FallbackAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.gold.withOpacity(0.2),
+      color: AppColors.gold.withValues(alpha: 0.2),
       child: const Icon(
         Icons.person_rounded,
         color: AppColors.gold,

@@ -1,4 +1,4 @@
-import 'package:ab_abroz_inventory/features/home/presentation/providers/home_providers.dart';
+import 'package:abroz_parts_plus/features/home/presentation/providers/home_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -111,9 +111,7 @@ class InventoryMachineCard extends ConsumerWidget {
       ),
     );
   }
-
-
-
+}
 
 // ─── Card Image with overlays ─────────────────────────────────────────────────
 
@@ -134,7 +132,7 @@ class _CardImage extends StatelessWidget {
       children: [
         // ── Machine image ──────────────────────────────────────────────────
         AspectRatio(
-          aspectRatio: 16 / 9,
+          aspectRatio: 4 / 3,
           child: CachedNetworkImage(
             imageUrl: machine.imageUrl,
             fit: BoxFit.cover,

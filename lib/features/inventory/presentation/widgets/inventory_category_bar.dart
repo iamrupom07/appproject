@@ -1,4 +1,4 @@
-import 'package:ab_abroz_inventory/features/home/domain/machine_model.dart';
+import 'package:abroz_parts_plus/features/home/domain/machine_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

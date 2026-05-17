@@ -72,7 +72,7 @@ class _CategoryTabItem extends StatelessWidget {
                   height: 60,
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppColors.gold.withOpacity(0.12)
+                        ? AppColors.gold.withValues(alpha: 0.12)
                         : AppColors.cardBackground,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
@@ -82,14 +82,14 @@ class _CategoryTabItem extends StatelessWidget {
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: AppColors.gold.withOpacity(0.2),
+                              color: AppColors.gold.withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(0, 3),
                             ),
                           ]
                         : [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: Colors.black.withValues(alpha: 0.04),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -191,6 +191,11 @@ class _CategoryData {
 }
 
 const List<_CategoryData> _categories = [
+  _CategoryData(
+    category: MachineCategory.all,
+    label: 'All',
+    icon: Icons.apps_rounded,
+  ),
   _CategoryData(
     category: MachineCategory.engineParts,
     label: 'Engine\nParts',

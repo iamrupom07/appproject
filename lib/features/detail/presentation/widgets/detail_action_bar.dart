@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:ab_abroz_inventory/core/constants/app_colors.dart';
-import 'package:ab_abroz_inventory/core/constants/app_sizes.dart';
-import 'package:ab_abroz_inventory/core/constants/app_text_styles.dart';
+import 'package:abroz_parts_plus/core/constants/app_colors.dart';
+import 'package:abroz_parts_plus/core/constants/app_sizes.dart';
+import 'package:abroz_parts_plus/core/constants/app_text_styles.dart';
 
 /// Sticky bottom bar with save, message, and call actions.
 class DetailActionBar extends StatelessWidget {

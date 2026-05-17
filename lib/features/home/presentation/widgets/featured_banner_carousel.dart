@@ -133,19 +133,23 @@ class _BannerCard extends StatelessWidget {
                             height: 1.1,
                             fontSize: 20,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 2),
                         Text(
                           machine.subtitle,
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textOnDark.withOpacity(0.7),
+                            color: AppColors.textOnDark.withValues(alpha: 0.7),
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: AppSizes.spaceSm),
                         Text(
                           'Inquire for Price',
                           style: AppTextStyles.labelSmall.copyWith(
-                            color: AppColors.textOnDark.withOpacity(0.6),
+                            color: AppColors.textOnDark.withValues(alpha: 0.6),
                           ),
                         ),
                         Text(
@@ -202,9 +206,9 @@ class _FeaturedBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.gold.withOpacity(0.2),
+        color: AppColors.gold.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(AppSizes.radiusPill),
-        border: Border.all(color: AppColors.gold.withOpacity(0.5)),
+        border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -282,11 +286,11 @@ class _StatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground.withOpacity(0.92),
+        color: AppColors.cardBackground.withValues(alpha: 0.92),
         borderRadius: BorderRadius.circular(AppSizes.radiusSm),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
