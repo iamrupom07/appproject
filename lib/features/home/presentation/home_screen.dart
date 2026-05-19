@@ -38,7 +38,6 @@ class HomeScreen extends ConsumerWidget {
             child: HomeHeaderBar(
               userName: 'User',
               dateLabel: dateLabel,
-              avatarUrl: 'https://i.pravatar.cc/150?img=11',
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceMd)),
@@ -108,10 +107,10 @@ class HomeScreen extends ConsumerWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
+                const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
                 itemCount: trending.length,
                 separatorBuilder: (_, __) =>
-                    const SizedBox(width: AppSizes.spaceSm),
+                const SizedBox(width: AppSizes.spaceSm),
                 itemBuilder: (_, index) => SizedBox(
                   width: 160,
                   child: MachineGridCard(machine: trending[index]),
@@ -133,10 +132,10 @@ class HomeScreen extends ConsumerWidget {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
+                const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
                 itemCount: recentlyAdded.length,
                 separatorBuilder: (_, __) =>
-                    const SizedBox(width: AppSizes.spaceSm),
+                const SizedBox(width: AppSizes.spaceSm),
                 itemBuilder: (_, index) => SizedBox(
                   width: 180,
                   child: RecentlyAddedCard(machine: recentlyAdded[index]),

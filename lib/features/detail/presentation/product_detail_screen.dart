@@ -37,7 +37,7 @@ class ProductDetailScreen extends ConsumerWidget {
         ),
         error: (e, _) => Center(
           child:
-              Text('Failed to load details', style: AppTextStyles.bodyMedium),
+          Text('Failed to load details', style: AppTextStyles.bodyMedium),
         ),
         data: (detail) {
           final activeTab = ref.watch(detailTabProvider);
@@ -94,7 +94,7 @@ class ProductDetailScreen extends ConsumerWidget {
                               scrollDirection: Axis.horizontal,
                               itemCount: detail.specs.length,
                               separatorBuilder: (_, __) =>
-                                  const SizedBox(width: AppSizes.spaceSm),
+                              const SizedBox(width: AppSizes.spaceSm),
                               itemBuilder: (context, i) {
                                 final spec = detail.specs[i];
                                 return SpecChip(
@@ -136,20 +136,20 @@ class ProductDetailScreen extends ConsumerWidget {
                       padding: const EdgeInsets.all(AppSizes.spaceMd),
                       child: switch (activeTab) {
                         DetailTab.overview => _OverviewTab(
-                            description: detail.description,
-                          ),
+                          description: detail.description,
+                        ),
                         DetailTab.specifications => _SpecificationsTab(
-                            techDetails: detail.techDetails,
-                          ),
+                          techDetails: detail.techDetails,
+                        ),
                         DetailTab.features => _FeaturesTab(
-                            features: detail.features,
-                          ),
+                          features: detail.features,
+                        ),
                         DetailTab.shipping => _ShippingTab(
-                            shippingInfo: detail.shippingInfo,
-                          ),
+                          shippingInfo: detail.shippingInfo,
+                        ),
                         DetailTab.condition => _ConditionTab(
-                            conditionNotes: detail.conditionNotes,
-                          ),
+                          conditionNotes: detail.conditionNotes,
+                        ),
                       },
                     ),
                   ),
@@ -225,7 +225,7 @@ class _MachineNameRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final machines = ref.watch(filteredMachinesProvider);
     final machine = machines.firstWhere(
-      (m) => m.id == machineId,
+          (m) => m.id == machineId,
       orElse: () => MachineModel(
         id: machineId,
         name: 'Machine #$machineId',
@@ -268,7 +268,7 @@ class _PriceRowById extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final machines = ref.watch(filteredMachinesProvider);
     final machine = machines.firstWhere(
-      (m) => m.id == machineId,
+          (m) => m.id == machineId,
       orElse: () => MachineModel(
         id: machineId,
         name: '',
@@ -280,7 +280,7 @@ class _PriceRowById extends ConsumerWidget {
       ),
     );
 
-    return PriceStockRow(status: machine.status);
+    return PriceStockRow(status: machine.status, machineName: machine.name);
   }
 }
 
@@ -315,7 +315,7 @@ class _SpecificationsTab extends StatelessWidget {
         Text('Technical Details', style: AppTextStyles.headingMedium),
         const SizedBox(height: AppSizes.spaceMd),
         ...techDetails.map(
-          (td) => Column(
+              (td) => Column(
             children: [
               TechDetailRow(
                 iconAsset: td.iconAsset,
@@ -396,10 +396,10 @@ class _StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) =>
+      BuildContext context,
+      double shrinkOffset,
+      bool overlapsContent,
+      ) =>
       child;
 
   @override

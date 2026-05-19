@@ -11,16 +11,12 @@ class HomeHeaderBar extends StatelessWidget {
     super.key,
     required this.userName,
     required this.dateLabel,
-    required this.avatarUrl,
     this.onSearchTap,
-    this.onAvatarTap,
   });
 
   final String userName;
   final String dateLabel;
-  final String? avatarUrl;
   final VoidCallback? onSearchTap;
-  final VoidCallback? onAvatarTap;
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +58,7 @@ class HomeHeaderBar extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: AppSizes.spaceSm),
 
-          // ── Avatar ───────────────────────────────────────────────────────
-          GestureDetector(
-            onTap: onAvatarTap,
-            child: _UserAvatar(imageUrl: avatarUrl),
-          ),
         ],
       ),
     );
@@ -127,10 +117,10 @@ class _UserAvatar extends StatelessWidget {
       child: ClipOval(
         child: imageUrl != null && imageUrl!.isNotEmpty
             ? Image.network(
-                imageUrl!,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const _FallbackAvatar(),
-              )
+          imageUrl!,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => const _FallbackAvatar(),
+        )
             : const _FallbackAvatar(),
       ),
     );
