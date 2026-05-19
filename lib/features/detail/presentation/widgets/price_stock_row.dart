@@ -7,7 +7,7 @@ import '../../../../../core/constants/app_text_styles.dart';
 import '../../../home/domain/machine_model.dart';
 import '../../../contact/domain/contact_model.dart';
 
-/// "Upon Request" price label (tappable → Get Quotation dialog) + stock pill.
+/// "Upon Request" price label (tappable → opens Messenger directly) + stock pill.
 class PriceStockRow extends StatelessWidget {
   const PriceStockRow({
     super.key,
@@ -18,11 +18,21 @@ class PriceStockRow extends StatelessWidget {
   final StockStatus status;
   final String machineName;
 
-  Future<void> _openQuotationDialog(BuildContext context) async {
-    await showDialog<void>(
-      context: context,
-      builder: (ctx) => _QuotationDialog(machineName: machineName),
-    );
+  Future<void> _openMessenger(BuildContext context) async {
+    final message = machineName.isNotEmpty
+        ? 'Hi! I would like to get a quotation for: $machineName'
+        : 'Hi! I would like to get a quotation for one of your machines.';
+    final encoded = Uri.encodeComponent(message);
+    final uri = Uri.parse('${ContactData.messengerUrl}?text=$encoded');
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      // Fallback: open messenger URL without prefilled text
+      final fallback = Uri.parse(ContactData.messengerUrl);
+      if (await canLaunchUrl(fallback)) {
+        await launchUrl(fallback, mode: LaunchMode.externalApplication);
+      }
+    }
   }
 
   @override
@@ -32,7 +42,7 @@ class PriceStockRow extends StatelessWidget {
       children: [
         // ── Tappable price area ──────────────────────────────────────────────
         GestureDetector(
-          onTap: () => _openQuotationDialog(context),
+          onTap: () => _openMessenger(context),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -84,125 +94,6 @@ class PriceStockRow extends StatelessWidget {
         ),
         const Spacer(),
         _StockPill(status: status),
-      ],
-    );
-  }
-}
-
-// ─── Quotation Dialog ─────────────────────────────────────────────────────────
-
-class _QuotationDialog extends StatelessWidget {
-  const _QuotationDialog({required this.machineName});
-  final String machineName;
-
-  Future<void> _openMessenger(BuildContext context) async {
-    final message = machineName.isNotEmpty
-        ? 'Hi! I would like to get a quotation for: $machineName'
-        : 'Hi! I would like to get a quotation for one of your machines.';
-    final encoded = Uri.encodeComponent(message);
-    final uri = Uri.parse('${ContactData.messengerUrl}?text=$encoded');
-    Navigator.of(context).pop();
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      // Fallback: open messenger URL without prefilled text
-      final fallback = Uri.parse(ContactData.messengerUrl);
-      if (await canLaunchUrl(fallback)) {
-        await launchUrl(fallback, mode: LaunchMode.externalApplication);
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-      ),
-      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-      actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: const Color(0xFF0084FF).withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.chat_bubble_rounded,
-              color: Color(0xFF0084FF),
-              size: 28,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Get a Quotation',
-            style: AppTextStyles.headingMedium,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            machineName.isNotEmpty
-                ? 'Request pricing for "$machineName" via Messenger. Our team will reply promptly.'
-                : 'Request pricing via Messenger. Our team will reply promptly.',
-            style: AppTextStyles.bodySmall,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-        ],
-      ),
-      actions: [
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppColors.divider),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 13),
-                ),
-                child: Text(
-                  'Cancel',
-                  style: AppTextStyles.buttonLabel.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton.icon(
-                onPressed: () => _openMessenger(context),
-                icon: const Icon(Icons.chat_bubble_rounded,
-                    size: 16, color: Colors.white),
-                label: Text(
-                  'Ask for Quote',
-                  style: AppTextStyles.buttonLabel.copyWith(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0084FF),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 13),
-                  elevation: 0,
-                ),
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }
