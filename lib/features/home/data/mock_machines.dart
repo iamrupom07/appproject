@@ -9,7 +9,6 @@ const List<MachineModel> kMockMachines = [
     name: 'Komatsu PC200 Engine Assembly',
     subtitle: 'Complete Engine Unit – SA6D102',
     category: MachineCategory.engineParts,
-    price: 0,
     status: StockStatus.inStock,
     imageUrl:
         'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
@@ -20,19 +19,18 @@ const List<MachineModel> kMockMachines = [
     name: 'Hydraulic Main Pump',
     subtitle: 'Komatsu PC200-8 / PC220-8',
     category: MachineCategory.hydraulics,
-    price: 0,
     status: StockStatus.inStock,
     imageUrl:
         'https://images.unsplash.com/photo-1590516516091-4aeeba72b8ea?w=800&q=80',
     isFeatured: true,
+    discountPercent: 10,
   ),
   MachineModel(
     id: '7',
     name: 'Track Chain Assembly',
     subtitle: 'Undercarriage – PC200 Series',
     category: MachineCategory.undercarriage,
-    price: 0,
-    status: StockStatus.inStock,
+    status: StockStatus.lowStock,
     imageUrl:
         'https://images.unsplash.com/photo-1580674285054-bed31e145f59?w=800&q=80',
     isFeatured: true,
@@ -44,7 +42,6 @@ const List<MachineModel> kMockMachines = [
     name: 'Swing Motor Assembly',
     subtitle: 'Komatsu PC130 / PC200',
     category: MachineCategory.swingMotor,
-    price: 0,
     status: StockStatus.inStock,
     imageUrl:
         'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80',
@@ -54,18 +51,17 @@ const List<MachineModel> kMockMachines = [
     name: 'Boom Cylinder Seal Kit',
     subtitle: 'Arm/Boom – PC200-8 Series',
     category: MachineCategory.armBoomBucket,
-    price: 0,
     status: StockStatus.inStock,
     imageUrl:
         'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&q=80',
+    discountPercent: 15,
   ),
   MachineModel(
     id: '5',
     name: 'Radiator Assembly',
     subtitle: 'Komatsu PC200 / PC220 Series',
     category: MachineCategory.radiator,
-    price: 0,
-    status: StockStatus.inStock,
+    status: StockStatus.lowStock,
     imageUrl:
         'https://images.unsplash.com/photo-1563520239648-a1e8d97a1177?w=400&q=80',
   ),
@@ -74,8 +70,7 @@ const List<MachineModel> kMockMachines = [
     name: 'Control Valve Assembly',
     subtitle: 'Main Control Valve – PC200-8',
     category: MachineCategory.controlValve,
-    price: 0,
-    status: StockStatus.inStock,
+    status: StockStatus.outOfStock,
     imageUrl:
         'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=400&q=80',
   ),
@@ -86,7 +81,6 @@ const List<MachineModel> kMockMachines = [
     name: 'Bucket Tooth & Adapter Set',
     subtitle: 'Ground Engaging Tools – PC200',
     category: MachineCategory.groundEngaging,
-    price: 0,
     status: StockStatus.inStock,
     imageUrl:
         'https://images.unsplash.com/photo-1586864387789-628af9feed72?w=400&q=80',
@@ -98,19 +92,18 @@ const List<MachineModel> kMockMachines = [
     name: 'Cabin Wiring Harness',
     subtitle: 'Electrical – PC200-8 / PC210',
     category: MachineCategory.cabinElectrical,
-    price: 0,
     status: StockStatus.inStock,
     imageUrl:
         'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80',
     isNew: true,
     isRecentlyAdded: true,
+    discountPercent: 5,
   ),
   MachineModel(
     id: '10',
     name: 'Turn Table Bearing',
     subtitle: 'Swing Circle – PC200 Series',
     category: MachineCategory.turnTable,
-    price: 0,
     status: StockStatus.inStock,
     imageUrl:
         'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=400&q=80',

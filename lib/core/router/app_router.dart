@@ -2,6 +2,7 @@ import 'package:abroz_parts_plus/features/contact/presentation/contact_screen.da
 import 'package:abroz_parts_plus/features/favorites/presentation/favorites_screen.dart';
 import 'package:abroz_parts_plus/features/home/presentation/onboarding_screen.dart';
 import 'package:abroz_parts_plus/features/home/presentation/splash_screen.dart';
+import 'package:abroz_parts_plus/features/profile/presentation/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,6 +13,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/widgets/floating_contact_button.dart';
 import '../../features/home/presentation/home_screen.dart';
+import '../../features/auth/presentation/login_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -26,6 +28,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       builder: (context, state) => const OnboardingScreen(),
+    ),
+
+    // ── Login ─────────────────────────────────────────────────────────────────
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(),
     ),
 
     // ── Main Shell with custom bottom nav ─────────────────────────────────────
@@ -52,8 +60,7 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: '/profile',
-          builder: (context, state) =>
-              const _PlaceholderScreen(title: 'Login coming soon'),
+          builder: (context, state) => const ProfileScreen(),
         ),
       ],
     ),
@@ -179,9 +186,9 @@ class _AppBottomNavBar extends StatelessWidget {
               _NavItem(
                 index: 4,
                 currentIndex: currentIndex,
-                icon: Icons.lock_rounded,
-                outlinedIcon: Icons.lock_outline_rounded,
-                label: 'Login',
+                icon: Icons.person_rounded,
+                outlinedIcon: Icons.person_outline_rounded,
+                label: 'Profile',
                 onTap: onTap,
               ),
             ],

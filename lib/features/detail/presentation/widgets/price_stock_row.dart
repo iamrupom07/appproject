@@ -3,18 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
-import '../../../../../core/widgets/stock_badge.dart';
 import '../../../home/domain/machine_model.dart';
 
-/// Price on the left, availability badge on the right.
+/// "Upon Request" price label on the left, stock pill on the right.
 class PriceStockRow extends StatelessWidget {
   const PriceStockRow({
     super.key,
-    required this.price,
     required this.status,
   });
 
-  final double price;
   final StockStatus status;
 
   @override
@@ -31,7 +28,7 @@ class PriceStockRow extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              'Available upon request',
+              'Upon Request',
               style: AppTextStyles.priceLarge.copyWith(fontSize: 18),
             ),
           ],
@@ -43,16 +40,27 @@ class PriceStockRow extends StatelessWidget {
   }
 }
 
-// ─── Extended Stock Pill (icon + label + sub-label) ───────────────────────────
+// ─── Extended Stock Pill (dot + label) ───────────────────────────────────────
 
 class _StockPill extends StatelessWidget {
   const _StockPill({required this.status});
 
   final StockStatus status;
 
+  Color get _color {
+    switch (status) {
+      case StockStatus.inStock:
+        return AppColors.inStock;
+      case StockStatus.lowStock:
+        return AppColors.lowStock;
+      case StockStatus.outOfStock:
+        return AppColors.outOfStock;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final color = _color(status);
+    final color = _color;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -60,7 +68,7 @@ class _StockPill extends StatelessWidget {
         vertical: AppSizes.spaceSm,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(AppSizes.radiusPill),
       ),
       child: Row(
@@ -69,10 +77,7 @@ class _StockPill extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 6),
           Column(
@@ -90,7 +95,15 @@ class _StockPill extends StatelessWidget {
                 Text(
                   'Available Now',
                   style: AppTextStyles.labelSmall.copyWith(
-                    color: color.withOpacity(0.75),
+                    color: color.withValues(alpha: 0.75),
+                    fontSize: 10,
+                  ),
+                ),
+              if (status == StockStatus.lowStock)
+                Text(
+                  'Hurry — Few Left',
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: color.withValues(alpha: 0.75),
                     fontSize: 10,
                   ),
                 ),
@@ -100,6 +113,4 @@ class _StockPill extends StatelessWidget {
       ),
     );
   }
-
-  static Color _color(StockStatus s) => AppColors.inStock;
 }

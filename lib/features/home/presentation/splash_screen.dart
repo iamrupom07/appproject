@@ -115,7 +115,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _onLoadComplete() {
     if (!mounted) return;
-    context.go('/onboarding');
+    context.go('/login');
   }
 
   @override
@@ -144,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen>
                     scale: _logoScale,
                     child: Image.asset(
                       'assets/icons/app_icon.png',
-                      width: size.width * 0.55,
+                      width: size.width * 0.22,
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -227,7 +227,7 @@ class _SplashScreenState extends State<SplashScreen>
                 // ── Loading bar ───────────────────────────────────────
                 Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: AppSizes.spaceXl),
+                  const EdgeInsets.symmetric(horizontal: AppSizes.spaceXl),
                   child: Column(
                     children: [
                       LoadingBar(

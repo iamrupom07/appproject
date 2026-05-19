@@ -9,6 +9,7 @@ import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../../core/widgets/stock_badge.dart';
 import '../../domain/machine_model.dart';
+import '../../domain/machine_model.dart';
 import '../providers/home_providers.dart';
 
 /// Reusable vertical card used in Trending Inventory + Recently Added grids.
@@ -55,6 +56,7 @@ class MachineGridCard extends ConsumerWidget {
               isFav: isFav,
               showNewBadge: showNewBadge,
               status: machine.status,
+              discountPercent: machine.discountPercent,
               onFavTap: () =>
                   ref.read(favoritesProvider.notifier).toggle(machine.id),
             ),
@@ -126,6 +128,7 @@ class _CardImage extends StatelessWidget {
     required this.showNewBadge,
     required this.status,
     required this.onFavTap,
+    this.discountPercent,
   });
 
   final String imageUrl;
@@ -133,6 +136,7 @@ class _CardImage extends StatelessWidget {
   final bool showNewBadge;
   final StockStatus status;
   final VoidCallback onFavTap;
+  final int? discountPercent;
 
   @override
   Widget build(BuildContext context) {
@@ -172,6 +176,14 @@ class _CardImage extends StatelessWidget {
           right: AppSizes.spaceSm,
           child: _FavoriteHeart(isFav: isFav, onTap: onFavTap),
         ),
+
+        // Discount badge — top-right (only when discount is active)
+        if (discountPercent != null)
+          Positioned(
+            top: AppSizes.spaceSm,
+            right: AppSizes.spaceSm,
+            child: DiscountBadge(percent: discountPercent!),
+          ),
       ],
     );
   }

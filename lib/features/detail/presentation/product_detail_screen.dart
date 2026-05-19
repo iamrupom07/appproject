@@ -231,7 +231,7 @@ class _MachineNameRow extends ConsumerWidget {
         name: 'Machine #$machineId',
         subtitle: '',
         category: MachineCategory.all,
-        price: 0,
+
         status: StockStatus.inStock,
         imageUrl: '',
       ),
@@ -274,13 +274,13 @@ class _PriceRowById extends ConsumerWidget {
         name: '',
         subtitle: '',
         category: MachineCategory.all,
-        price: 0,
+
         status: StockStatus.inStock,
         imageUrl: '',
       ),
     );
 
-    return PriceStockRow(price: machine.price, status: machine.status);
+    return PriceStockRow(status: machine.status);
   }
 }
 

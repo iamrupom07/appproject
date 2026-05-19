@@ -185,6 +185,14 @@ class _CardImage extends StatelessWidget {
           child: _FavoriteHeart(isFav: isFav, onTap: onFavTap),
         ),
 
+        // ── Discount badge — bottom-right (when active) ────────────────────
+        if (machine.discountPercent != null)
+          Positioned(
+            bottom: 6,
+            right: AppSizes.spaceSm,
+            child: DiscountBadge(percent: machine.discountPercent!),
+          ),
+
         // ── Photo counter — bottom-left ────────────────────────────────────
         Positioned(
           bottom: 6,

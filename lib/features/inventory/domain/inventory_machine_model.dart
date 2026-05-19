@@ -29,9 +29,9 @@ class InventoryMachineModel {
   String get name => machine.name;
   String get subtitle => machine.subtitle;
   MachineCategory get category => machine.category;
-  double get price => machine.price;
   StockStatus get status => machine.status;
   String get imageUrl => machine.imageUrl;
+  int? get discountPercent => machine.discountPercent;
 
   @override
   bool operator ==(Object other) =>

@@ -6,6 +6,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import 'providers/inventory_providers.dart';
 import 'widgets/inventory_bottom_bar.dart';
+import 'widgets/filter_bottom_sheet.dart';
 import 'widgets/inventory_category_bar.dart';
 import 'widgets/inventory_filter_bar.dart';
 import 'widgets/inventory_header_bar.dart';
@@ -172,7 +173,11 @@ class InventoryScreen extends ConsumerWidget {
               left: 0,
               right: 0,
               bottom: 0,
-              child: const InventoryBottomBar(),
+              child: Builder(
+                builder: (ctx) => InventoryBottomBar(
+                  onRefineTap: () => showFilterBottomSheet(ctx),
+                ),
+              ),
             ),
           ],
         ),

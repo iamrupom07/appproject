@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/mock_machines.dart';
 import '../../domain/machine_model.dart';
@@ -6,7 +7,7 @@ import '../../domain/machine_model.dart';
 // ─── Selected Category ────────────────────────────────────────────────────────
 
 final selectedCategoryProvider =
-    StateProvider<MachineCategory>((ref) => MachineCategory.all);
+StateProvider<MachineCategory>((ref) => MachineCategory.all);
 
 // ─── Search Query ─────────────────────────────────────────────────────────────
 
@@ -14,8 +15,23 @@ final searchQueryProvider = StateProvider<String>((ref) => '');
 
 // ─── Favorites ────────────────────────────────────────────────────────────────
 
+const _kFavoritesKey = 'guest_favorites';
+
 class FavoritesNotifier extends StateNotifier<Set<String>> {
-  FavoritesNotifier() : super(const {});
+  FavoritesNotifier() : super(const {}) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList(_kFavoritesKey) ?? [];
+    state = saved.toSet();
+  }
+
+  Future<void> _persist() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(_kFavoritesKey, state.toList());
+  }
 
   void toggle(String machineId) {
     if (state.contains(machineId)) {
@@ -23,19 +39,20 @@ class FavoritesNotifier extends StateNotifier<Set<String>> {
     } else {
       state = {...state, machineId};
     }
+    _persist();
   }
 
   bool isFavorite(String machineId) => state.contains(machineId);
 }
 
 final favoritesProvider = StateNotifierProvider<FavoritesNotifier, Set<String>>(
-  (ref) => FavoritesNotifier(),
+      (ref) => FavoritesNotifier(),
 );
 
 // ─── All Machines (source of truth) ──────────────────────────────────────────
 
 final allMachinesProvider = Provider<List<MachineModel>>(
-  (ref) => kMockMachines,
+      (ref) => kMockMachines,
 );
 
 // ─── Filtered Machines (derived) ─────────────────────────────────────────────
@@ -56,9 +73,9 @@ final filteredMachinesProvider = Provider<List<MachineModel>>((ref) {
     list = list
         .where(
           (m) =>
-              m.name.toLowerCase().contains(query) ||
-              m.subtitle.toLowerCase().contains(query),
-        )
+      m.name.toLowerCase().contains(query) ||
+          m.subtitle.toLowerCase().contains(query),
+    )
         .toList();
   }
 
@@ -110,7 +127,7 @@ enum FavoritesSort {
 
 /// Persists the currently selected sort order for the Favorites screen.
 final favoritesSortProvider =
-    StateProvider<FavoritesSort>((ref) => FavoritesSort.recent);
+StateProvider<FavoritesSort>((ref) => FavoritesSort.recent);
 
 /// Derives the full [MachineModel] list from the saved ID set, then applies
 /// the selected sort. Recomputes automatically whenever favorites or sort changes.
@@ -124,12 +141,12 @@ final favoritedMachinesProvider = Provider<List<MachineModel>>((ref) {
 
   switch (sort) {
     case FavoritesSort.recent:
-      // Keep natural insertion order (no-op; ids is a Set so order tracks adds)
+    // Keep natural insertion order (no-op; ids is a Set so order tracks adds)
       break;
     case FavoritesSort.priceAsc:
-      list.sort((a, b) => a.price.compareTo(b.price));
+    // price sort removed — pricing is upon request
     case FavoritesSort.priceDesc:
-      list.sort((a, b) => b.price.compareTo(a.price));
+    // price sort removed — pricing is upon request
     case FavoritesSort.category:
       list.sort((a, b) => a.category.label.compareTo(b.category.label));
   }

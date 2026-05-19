@@ -7,48 +7,51 @@ class MachineModel {
     required this.name,
     required this.subtitle,
     required this.category,
-    required this.price,
     required this.status,
     required this.imageUrl,
     this.isFeatured = false,
     this.isNew = false,
     this.isRecentlyAdded = false,
+    this.discountPercent,
   });
 
   final String id;
   final String name;
   final String subtitle;
   final MachineCategory category;
-  final double price;
   final StockStatus status;
   final String imageUrl;
   final bool isFeatured;
   final bool isNew;
   final bool isRecentlyAdded;
 
+  /// Nullable — null means no active discount.
+  /// Used to show a discount badge on cards.
+  final int? discountPercent;
+
   MachineModel copyWith({
     String? id,
     String? name,
     String? subtitle,
     MachineCategory? category,
-    double? price,
     StockStatus? status,
     String? imageUrl,
     bool? isFeatured,
     bool? isNew,
     bool? isRecentlyAdded,
+    int? discountPercent,
   }) {
     return MachineModel(
       id: id ?? this.id,
       name: name ?? this.name,
       subtitle: subtitle ?? this.subtitle,
       category: category ?? this.category,
-      price: price ?? this.price,
       status: status ?? this.status,
       imageUrl: imageUrl ?? this.imageUrl,
       isFeatured: isFeatured ?? this.isFeatured,
       isNew: isNew ?? this.isNew,
       isRecentlyAdded: isRecentlyAdded ?? this.isRecentlyAdded,
+      discountPercent: discountPercent ?? this.discountPercent,
     );
   }
 
@@ -83,9 +86,9 @@ enum MachineCategory {
 }
 
 enum StockStatus {
-  inStock('Available'),
-  lowStock('Available'),
-  outOfStock('Available');
+  inStock('In Stock'),
+  lowStock('Low Stock'),
+  outOfStock('Out of Stock');
 
   const StockStatus(this.label);
   final String label;
