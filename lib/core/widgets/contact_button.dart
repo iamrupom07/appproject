@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/app_text_styles.dart';
+import '../utils/messenger_launcher.dart';
 
 /// Reusable outlined "Contact" button used on machine cards.
-/// Pass [onTap] to handle navigation to contact flow.
+/// Tapping it opens Facebook Messenger for abrozmachinery.
 class ContactButton extends StatelessWidget {
   const ContactButton({
     super.key,
@@ -33,10 +34,19 @@ class ContactButton extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.chat_bubble_outline_rounded,
-                size: 13,
-                color: AppColors.textSecondary,
+              // Facebook Messenger icon
+              Container(
+                width: 14,
+                height: 14,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF0084FF),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.messenger_rounded,
+                  size: 9,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(width: 5),
               Text(

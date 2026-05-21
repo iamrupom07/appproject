@@ -8,18 +8,17 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import 'providers/home_providers.dart';
 import 'widgets/category_tab_row.dart';
-import 'widgets/featured_banner_carousel.dart';
 import 'widgets/home_header_bar.dart';
 import 'widgets/machine_grid_card.dart';
 import 'widgets/recently_added_card.dart';
 import 'widgets/section_header.dart';
+import 'widgets/split_section.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final featured = ref.watch(featuredMachinesProvider);
     final trending = ref.watch(trendingMachinesProvider);
     final recentlyAdded = ref.watch(recentlyAddedProvider);
     final dateLabel = DateFormat('EEEE, MMMM d, y').format(DateTime.now());
@@ -88,9 +87,10 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),
-          SliverToBoxAdapter(
-            child: FeaturedBannerCarousel(machines: featured),
-          ),
+
+          // ── Split Section: Spare Parts | Mechanical Services ────────────
+          const SliverToBoxAdapter(child: HomeSplitSection()),
+
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),
           const SliverToBoxAdapter(child: CategoryTabRow()),
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),

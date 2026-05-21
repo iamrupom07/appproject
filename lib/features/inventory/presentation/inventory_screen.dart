@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
+import '../../../core/utils/messenger_launcher.dart';
 import 'providers/inventory_providers.dart';
 import 'widgets/inventory_bottom_bar.dart';
 import 'widgets/filter_bottom_sheet.dart';
@@ -176,6 +177,7 @@ class InventoryScreen extends ConsumerWidget {
               child: Builder(
                 builder: (ctx) => InventoryBottomBar(
                   onRefineTap: () => showFilterBottomSheet(ctx),
+                  onCallTap: callAbroz,
                 ),
               ),
             ),

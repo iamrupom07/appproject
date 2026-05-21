@@ -32,7 +32,7 @@ class BusinessHour {
 
   final String label;
 
-  /// e.g. "8:00 AM – 6:00 PM" or "Closed"
+  /// e.g. "8:00 AM – 8:00 PM"
   final String hours;
 
   final bool isOpen;
@@ -71,10 +71,11 @@ class ContactData {
         'https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=600&q=80',
   );
 
+  /// Business hours — open every day, 8 AM–8 PM.
   static const List<BusinessHour> businessHours = [
-    BusinessHour(label: 'Mon – Fri', hours: '8:00 AM – 6:00 PM', isOpen: true),
-    BusinessHour(label: 'Saturday', hours: '8:00 AM – 2:00 PM', isOpen: true),
-    BusinessHour(label: 'Sunday', hours: 'Closed', isOpen: false),
+    BusinessHour(label: 'Mon – Fri', hours: '8:00 AM – 8:00 PM', isOpen: true),
+    BusinessHour(label: 'Saturday', hours: '8:00 AM – 8:00 PM', isOpen: true),
+    BusinessHour(label: 'Sunday', hours: '8:00 AM – 8:00 PM', isOpen: true),
   ];
 
   static const List<SocialLink> socialLinks = [
@@ -95,6 +96,15 @@ class ContactData {
     ),
   ];
 
-  static const String messengerUrl = 'https://m.me/abrozmachinery';
+  /// Facebook Messenger deep-link. Falls back to the Facebook page URL
+  /// if the Messenger app is not installed.
+  static const String messengerDeepLink =
+      'fb-messenger://user-thread/abrozmachinery';
+  static const String messengerFallbackUrl =
+      'https://www.facebook.com/abrozmachinery/';
+
+  /// Legacy alias kept for widgets that still reference [messengerUrl].
+  static const String messengerUrl = messengerDeepLink;
+
   static const String phoneNumber = 'tel:+639175100030';
 }

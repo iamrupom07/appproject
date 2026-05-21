@@ -51,6 +51,7 @@ class _SocialIcon extends StatelessWidget {
   // Platform brand colours
   static const Map<SocialPlatform, Color> _bgColors = {
     SocialPlatform.facebook: Color(0xFF1877F2),
+    SocialPlatform.messenger: Color(0xFF0084FF),
     SocialPlatform.instagram: Color(0xFFE1306C),
     SocialPlatform.linkedin: Color(0xFF0A66C2),
     SocialPlatform.youtube: Color(0xFFFF0000),
@@ -60,6 +61,7 @@ class _SocialIcon extends StatelessWidget {
 
   static const Map<SocialPlatform, IconData> _icons = {
     SocialPlatform.facebook: Icons.facebook_rounded,
+    SocialPlatform.messenger: Icons.messenger_rounded,
     SocialPlatform.instagram: Icons.camera_alt_rounded,
     SocialPlatform.linkedin: Icons.work_rounded,
     SocialPlatform.youtube: Icons.play_circle_filled_rounded,
@@ -69,6 +71,7 @@ class _SocialIcon extends StatelessWidget {
 
   static const Map<SocialPlatform, String> _labels = {
     SocialPlatform.facebook: 'Facebook',
+    SocialPlatform.messenger: 'Messenger',
     SocialPlatform.instagram: 'Instagram',
     SocialPlatform.linkedin: 'LinkedIn',
     SocialPlatform.youtube: 'YouTube',
@@ -86,17 +89,24 @@ class _SocialIcon extends StatelessWidget {
       onTap: _launch,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 64,
+        width: 68,
         child: Column(
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
                 color: bg,
                 borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+                boxShadow: [
+                  BoxShadow(
+                    color: bg.withValues(alpha: 0.35),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              child: Icon(icon, color: Colors.white, size: 22),
+              child: Icon(icon, color: Colors.white, size: 24),
             ),
             const SizedBox(height: 6),
             Text(

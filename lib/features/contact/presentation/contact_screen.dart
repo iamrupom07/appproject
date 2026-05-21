@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/utils/messenger_launcher.dart';
 import '../domain/contact_model.dart';
 import 'widgets/business_hours_card.dart';
 import 'widgets/contact_action_card.dart';
@@ -22,17 +23,9 @@ import 'widgets/social_links_row.dart';
 class ContactScreen extends StatelessWidget {
   const ContactScreen({super.key});
 
-  Future<void> _openMessenger() async {
-    final uri = Uri.parse(ContactData.messengerUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
+  Future<void> _openMessenger() => openMessenger();
 
-  Future<void> _callUs() async {
-    final uri = Uri.parse(ContactData.phoneNumber);
-    if (await canLaunchUrl(uri)) await launchUrl(uri);
-  }
+  Future<void> _callUs() => callAbroz();
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +90,7 @@ class ContactScreen extends StatelessWidget {
                               orElse: () => const SocialLink(
                                 platform: SocialPlatform.facebook,
                                 handle: '',
-                                url: ContactData.messengerUrl,
+                                url: ContactData.messengerFallbackUrl,
                               ),
                             ),
                           )
@@ -249,11 +242,7 @@ class _ActionCardsRow extends StatelessWidget {
           // Messenger card (gold)
           ContactActionCard(
             backgroundColor: AppColors.gold,
-            iconWidget: const Icon(
-              Icons.messenger_rounded,
-              color: Colors.white,
-              size: 22,
-            ),
+            iconWidget: const _FbMessengerIcon(color: Colors.white, size: 22),
             label: 'Chat on',
             title: 'Messenger',
             subtitle: 'Get quick response',
@@ -279,5 +268,23 @@ class _ActionCardsRow extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+
+// ─── Facebook Messenger Icon ──────────────────────────────────────────────────
+
+/// Custom painter that draws the Facebook Messenger lightning-bolt logo.
+class _FbMessengerIcon extends StatelessWidget {
+  const _FbMessengerIcon({required this.color, this.size = 24});
+
+  final Color color;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    // Use the built-in messenger icon as close approximation —
+    // for a pixel-perfect FB logo replace with an SVG asset.
+    return Icon(Icons.messenger_rounded, size: size, color: color);
   }
 }

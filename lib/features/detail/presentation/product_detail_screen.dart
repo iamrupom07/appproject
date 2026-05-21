@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/utils/messenger_launcher.dart';
 import '../../home/domain/machine_model.dart';
 import '../../home/presentation/providers/home_providers.dart';
-import '../../contact/domain/contact_model.dart';
 import 'providers/detail_providers.dart';
 import 'widgets/detail_action_bar.dart';
 import 'widgets/detail_image_gallery.dart';
@@ -168,19 +167,8 @@ class ProductDetailScreen extends ConsumerWidget {
                   isSaved: isSaved,
                   onSave: () =>
                       ref.read(favoritesProvider.notifier).toggle(machineId),
-                  onMessage: () async {
-                    final uri = Uri.parse(ContactData.messengerUrl);
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(
-                        uri,
-                        mode: LaunchMode.externalApplication,
-                      );
-                    }
-                  },
-                  onCall: () async {
-                    final uri = Uri.parse(ContactData.phoneNumber);
-                    if (await canLaunchUrl(uri)) await launchUrl(uri);
-                  },
+                  onMessage: openMessenger,
+                  onCall: callAbroz,
                 ),
               ),
             ],

@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
+import '../../../../../core/utils/messenger_launcher.dart';
 import '../../../../../core/widgets/stock_badge.dart';
 import '../../domain/machine_model.dart';
 import '../../domain/machine_model.dart';
@@ -109,7 +110,7 @@ class MachineGridCard extends ConsumerWidget {
                 AppSizes.spaceSm,
               ),
               child: _ContactButton(
-                onTap: () {/* navigate to contact */},
+                onTap: openMessenger,
               ),
             ),
           ],
@@ -269,7 +270,7 @@ class _ContactButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.chat_bubble_outline_rounded,
+              Icons.messenger_rounded,
               size: 13,
               color: AppColors.textSecondary,
             ),

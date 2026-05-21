@@ -2,6 +2,8 @@ import 'package:abroz_parts_plus/features/contact/presentation/contact_screen.da
 import 'package:abroz_parts_plus/features/favorites/presentation/favorites_screen.dart';
 import 'package:abroz_parts_plus/features/home/presentation/onboarding_screen.dart';
 import 'package:abroz_parts_plus/features/home/presentation/splash_screen.dart';
+import 'package:abroz_parts_plus/features/services/presentation/spare_parts_screen.dart';
+import 'package:abroz_parts_plus/features/services/presentation/mechanical_services_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -57,6 +59,18 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/search',
       builder: (context, state) => const SearchScreen(),
+    ),
+
+    // ── Spare Parts ───────────────────────────────────────────────────────────
+    GoRoute(
+      path: '/spare-parts',
+      builder: (context, state) => const SparePartsScreen(),
+    ),
+
+    // ── Mechanical Services ───────────────────────────────────────────────────
+    GoRoute(
+      path: '/mechanical-services',
+      builder: (context, state) => const MechanicalServicesScreen(),
     ),
 
     // ── Item Detail ───────────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
+import '../../../../../core/utils/messenger_launcher.dart';
 import '../../../home/domain/machine_model.dart';
 import '../../../contact/domain/contact_model.dart';
 
@@ -19,19 +20,16 @@ class PriceStockRow extends StatelessWidget {
   final String machineName;
 
   Future<void> _openMessenger(BuildContext context) async {
+    // Try deep link with pre-filled message, fall back to openMessenger()
     final message = machineName.isNotEmpty
         ? 'Hi! I would like to get a quotation for: $machineName'
         : 'Hi! I would like to get a quotation for one of your machines.';
     final encoded = Uri.encodeComponent(message);
-    final uri = Uri.parse('${ContactData.messengerUrl}?text=$encoded');
+    final uri = Uri.parse('${ContactData.messengerDeepLink}?text=$encoded');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
-      // Fallback: open messenger URL without prefilled text
-      final fallback = Uri.parse(ContactData.messengerUrl);
-      if (await canLaunchUrl(fallback)) {
-        await launchUrl(fallback, mode: LaunchMode.externalApplication);
-      }
+      await openMessenger();
     }
   }
 
@@ -71,7 +69,7 @@ class PriceStockRow extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(
-                          Icons.chat_bubble_rounded,
+                          Icons.messenger_rounded,
                           color: Colors.white,
                           size: 11,
                         ),

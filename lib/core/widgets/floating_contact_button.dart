@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/app_text_styles.dart';
+import '../utils/messenger_launcher.dart';
 import '../../features/contact/domain/contact_model.dart';
 
 /// Persistent gold FAB shown on every main screen.
@@ -62,16 +62,12 @@ class _ContactSheet extends StatelessWidget {
 
   Future<void> _call(BuildContext context) async {
     Navigator.pop(context);
-    final uri = Uri.parse(ContactData.phoneNumber);
-    if (await canLaunchUrl(uri)) await launchUrl(uri);
+    await callAbroz();
   }
 
   Future<void> _message(BuildContext context) async {
     Navigator.pop(context);
-    final uri = Uri.parse(ContactData.messengerUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
+    await openMessenger();
   }
 
   @override
@@ -130,7 +126,7 @@ class _ContactSheet extends StatelessWidget {
               ),
               const SizedBox(height: AppSizes.spaceSm),
 
-              // Message button
+              // Messenger button — uses Facebook Messenger icon
               _SheetAction(
                 icon: Icons.messenger_rounded,
                 iconBg: const Color(0xFF0084FF),

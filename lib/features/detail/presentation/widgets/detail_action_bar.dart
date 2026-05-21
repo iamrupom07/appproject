@@ -118,8 +118,8 @@ class _MessageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BarButton(
       onTap: onTap,
-      icon: Icons.chat_bubble_rounded,
-      label: 'Message',
+      icon: Icons.messenger_rounded,
+      label: 'Messenger',
       backgroundColor: AppColors.pageBackground,
       foregroundColor: AppColors.textPrimary,
       iconBackgroundColor: const Color(0xFF0084FF),

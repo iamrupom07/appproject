@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
+import '../../../../../core/utils/messenger_launcher.dart';
 import '../../../../../core/widgets/contact_button.dart';
 import '../../../../../core/widgets/stock_badge.dart';
 import '../../../../features/home/presentation/providers/home_providers.dart';
@@ -121,7 +122,7 @@ class InventoryListCard extends ConsumerWidget {
                         ),
                         const Spacer(),
                         ContactButton(
-                          onTap: () {/* navigate to contact */},
+                          onTap: openMessenger,
                           height: 28,
                         ),
                       ],
