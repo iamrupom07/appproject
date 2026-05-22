@@ -5,7 +5,7 @@ import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../constants/app_text_styles.dart';
 import '../utils/messenger_launcher.dart';
-import '../../features/contact/domain/contact_model.dart';
+import 'messenger_logo.dart';
 
 /// Persistent gold FAB shown on every main screen.
 /// Tapping it opens a compact bottom sheet with Call and Message options.
@@ -45,10 +45,8 @@ class FloatingContactButton extends StatelessWidget {
             ),
           ],
         ),
-        child: const Icon(
-          Icons.support_agent_rounded,
-          color: Colors.white,
-          size: 26,
+        child: const Center(
+          child: MessengerLogo(size: 30),
         ),
       ),
     );
@@ -118,7 +116,11 @@ class _ContactSheet extends StatelessWidget {
 
               // Call button
               _SheetAction(
-                icon: Icons.phone_rounded,
+                icon: const Icon(
+                  Icons.phone_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
                 iconBg: AppColors.inStock,
                 label: 'Call Us Now',
                 sublabel: '+63 917 510 0030',
@@ -128,8 +130,8 @@ class _ContactSheet extends StatelessWidget {
 
               // Messenger button — uses Facebook Messenger icon
               _SheetAction(
-                icon: Icons.messenger_rounded,
-                iconBg: const Color(0xFF0084FF),
+                icon: const MessengerLogo(size: 24),
+                iconBg: const Color(0xFFEAF4FF),
                 label: 'Message on Facebook',
                 sublabel: 'Usually replies within an hour',
                 onTap: () => _message(context),
@@ -154,7 +156,7 @@ class _SheetAction extends StatelessWidget {
     required this.onTap,
   });
 
-  final IconData icon;
+  final Widget icon;
   final Color iconBg;
   final String label;
   final String sublabel;
@@ -183,7 +185,7 @@ class _SheetAction extends StatelessWidget {
                   color: iconBg,
                   borderRadius: BorderRadius.circular(AppSizes.radiusMd),
                 ),
-                child: Icon(icon, color: Colors.white, size: 22),
+                child: Center(child: icon),
               ),
               const SizedBox(width: AppSizes.spaceMd),
 

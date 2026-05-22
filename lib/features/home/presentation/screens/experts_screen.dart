@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
-import '../../../../../features/contact/domain/contact_model.dart';
+import '../../../../../core/utils/messenger_launcher.dart';
+import '../../../../../core/widgets/messenger_logo.dart';
 
 /// Full-screen "Experts" page – navigated from the homepage split section.
 class ExpertsScreen extends StatelessWidget {
   const ExpertsScreen({super.key});
 
-  Future<void> _openMessenger() async {
-    final uri = Uri.parse(ContactData.messengerUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
+  Future<void> _openMessenger() => openMessenger();
 
-  Future<void> _callNow() async {
-    final uri = Uri.parse(ContactData.phoneNumber);
-    if (await canLaunchUrl(uri)) await launchUrl(uri);
-  }
+  Future<void> _callNow() => callAbroz();
 
   @override
   Widget build(BuildContext context) {
@@ -472,8 +464,7 @@ class _StickyCtaBar extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.messenger_rounded,
-                        color: Colors.white, size: 20),
+                    const MessengerLogo(size: 22),
                     const SizedBox(width: 8),
                     Text('Message Us',
                         style: AppTextStyles.buttonLabel.copyWith(

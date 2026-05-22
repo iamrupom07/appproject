@@ -24,7 +24,7 @@ class SearchPreviewWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.radiusLg),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.07),
+            color: Colors.black.withValues(alpha: 0.07),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -194,7 +194,7 @@ class _MachineListCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -232,7 +232,7 @@ class _MachineListCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppColors.inStock.withOpacity(0.12),
+                    color: AppColors.inStock.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSizes.radiusPill),
                   ),
                   child: Text(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:abroz_parts_plus/core/constants/app_colors.dart';
 import 'package:abroz_parts_plus/core/constants/app_sizes.dart';
 import 'package:abroz_parts_plus/core/constants/app_text_styles.dart';
+import 'package:abroz_parts_plus/core/widgets/messenger_logo.dart';
 
 /// Sticky bottom bar with save, message, and call actions.
 class DetailActionBar extends StatelessWidget {
@@ -118,11 +119,10 @@ class _MessageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BarButton(
       onTap: onTap,
-      icon: Icons.messenger_rounded,
+      icon: const MessengerLogo(size: 24),
       label: 'Messenger',
       backgroundColor: AppColors.pageBackground,
       foregroundColor: AppColors.textPrimary,
-      iconBackgroundColor: const Color(0xFF0084FF),
     );
   }
 }
@@ -136,7 +136,11 @@ class _CallButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BarButton(
       onTap: onTap,
-      icon: Icons.phone_rounded,
+      icon: const Icon(
+        Icons.phone_rounded,
+        size: 20,
+        color: AppColors.textPrimary,
+      ),
       label: 'Call Now',
       backgroundColor: AppColors.gold,
       foregroundColor: AppColors.textPrimary,
@@ -151,15 +155,13 @@ class _BarButton extends StatelessWidget {
     required this.label,
     required this.backgroundColor,
     required this.foregroundColor,
-    this.iconBackgroundColor,
   });
 
   final VoidCallback onTap;
-  final IconData icon;
+  final Widget icon;
   final String label;
   final Color backgroundColor;
   final Color foregroundColor;
-  final Color? iconBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -180,11 +182,7 @@ class _BarButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _ActionIcon(
-                    icon: icon,
-                    iconColor: foregroundColor,
-                    backgroundColor: iconBackgroundColor,
-                  ),
+                  icon,
                   const SizedBox(width: AppSizes.spaceSm),
                   Flexible(
                     child: Text(
@@ -203,35 +201,6 @@ class _BarButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _ActionIcon extends StatelessWidget {
-  const _ActionIcon({
-    required this.icon,
-    required this.iconColor,
-    this.backgroundColor,
-  });
-
-  final IconData icon;
-  final Color iconColor;
-  final Color? backgroundColor;
-
-  @override
-  Widget build(BuildContext context) {
-    if (backgroundColor == null) {
-      return Icon(icon, size: 20, color: iconColor);
-    }
-
-    return Container(
-      width: 28,
-      height: 28,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        shape: BoxShape.circle,
-      ),
-      child: Icon(icon, color: Colors.white, size: 15),
     );
   }
 }

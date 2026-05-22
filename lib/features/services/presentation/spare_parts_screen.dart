@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/utils/messenger_launcher.dart';
-import '../../contact/domain/contact_model.dart';
+import '../../../core/widgets/messenger_logo.dart';
 import 'widgets/service_media_section.dart';
 
 class SparePartsScreen extends StatelessWidget {
@@ -15,7 +14,8 @@ class SparePartsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+      value: SystemUiOverlayStyle.dark
+          .copyWith(statusBarColor: Colors.transparent),
       child: Scaffold(
         backgroundColor: AppColors.pageBackground,
         body: SafeArea(
@@ -43,9 +43,8 @@ class SparePartsScreen extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(
-                      AppSizes.spaceMd, AppSizes.spaceMd,
-                      AppSizes.spaceMd, AppSizes.spaceMd),
+                  padding: const EdgeInsets.fromLTRB(AppSizes.spaceMd,
+                      AppSizes.spaceMd, AppSizes.spaceMd, AppSizes.spaceMd),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -72,8 +71,8 @@ class SparePartsScreen extends StatelessWidget {
                         'performance with minimal downtime.\n\n'
                         'All parts are sourced from trusted suppliers and verified for '
                         'compatibility. Contact us today to check availability and pricing.',
-                        style: AppTextStyles.bodyMedium
-                            .copyWith(height: 1.6, color: AppColors.textSecondary),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                            height: 1.6, color: AppColors.textSecondary),
                       ),
                       // Bottom padding to clear the action bar
                       const SizedBox(height: 90),
@@ -126,7 +125,7 @@ class _ServiceActionBar extends StatelessWidget {
             Expanded(
               child: _ActionBarButton(
                 onTap: onMessengerTap,
-                icon: _MessengerIcon(),
+                icon: const MessengerLogo(size: 22),
                 label: 'Messenger',
                 backgroundColor: const Color(0xFF0084FF),
                 foregroundColor: Colors.white,
@@ -194,81 +193,4 @@ class _ActionBarButton extends StatelessWidget {
       ),
     );
   }
-}
-
-class _MessengerIcon extends StatelessWidget {
-  const _MessengerIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: const Size(22, 22),
-      painter: _MessengerPainter(color: Colors.white),
-    );
-  }
-}
-
-class _MessengerPainter extends CustomPainter {
-  final Color color;
-  const _MessengerPainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    final cx = size.width / 2;
-    final cy = size.height / 2;
-    final r = size.width * 0.48;
-
-    // Outer circle
-    final outerPath = Path()
-      ..addOval(Rect.fromCircle(center: Offset(cx, cy), radius: r));
-
-    // Lightning bolt tail
-    final tailPath = Path()
-      ..moveTo(cx - r * 0.1, cy + r * 0.35)
-      ..lineTo(cx - r * 0.1, cy + r * 0.78)
-      ..lineTo(cx + r * 0.32, cy + r * 0.45);
-
-    canvas.drawPath(outerPath, paint);
-
-    // Inner cut-out (background circle)
-    final cutPaint = Paint()
-      ..color = const Color(0xFF0084FF)
-      ..style = PaintingStyle.fill;
-    canvas.drawOval(
-      Rect.fromCircle(center: Offset(cx, cy - r * 0.05), radius: r * 0.68),
-      cutPaint,
-    );
-
-    // Bolt
-    canvas.drawPath(tailPath, paint);
-
-    // Lightning bolt body (upward pointing)
-    final boltPaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.1
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
-    final boltPath = Path()
-      ..moveTo(cx - r * 0.35, cy + r * 0.1)
-      ..lineTo(cx - r * 0.02, cy - r * 0.38)
-      ..lineTo(cx - r * 0.02, cy - r * 0.02)
-      ..lineTo(cx + r * 0.35, cy - r * 0.45)
-      ..lineTo(cx + r * 0.02, cy + r * 0.02)
-      ..lineTo(cx + r * 0.02, cy + r * 0.38)
-      ..close();
-
-    final boltFill = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill;
-    canvas.drawPath(boltPath, boltFill);
-  }
-
-  @override
-  bool shouldRepaint(_MessengerPainter oldDelegate) => oldDelegate.color != color;
 }

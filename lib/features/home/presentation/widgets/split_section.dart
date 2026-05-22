@@ -5,8 +5,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
 
-/// Two-column split section that replaces the featured carousel on the home
-/// screen. Left tile → Spare Parts; Right tile → Mechanical Services.
+/// Two high-priority home actions: spare parts and mechanical services.
 class HomeSplitSection extends StatelessWidget {
   const HomeSplitSection({super.key});
 
@@ -14,44 +13,44 @@ class HomeSplitSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
-      child: IntrinsicHeight(
+      child: SizedBox(
+        height: 154,
         child: Row(
           children: [
-            // ── Left: Spare Parts ───────────────────────────────────────
             Expanded(
               child: _SplitTile(
-                label: 'SPARE PARTS',
-                icon: Icons.construction_rounded,
+                title: 'Spare\nParts',
+                subtitle: 'Parts ready for inquiry',
+                icon: Icons.handyman_rounded,
                 gradient: const LinearGradient(
-                  colors: [Color(0xFFE8B84B), Color(0xFFD4A017)],
+                  colors: [
+                    Color(0xFFF1C45A),
+                    Color(0xFFE3A51E),
+                    Color(0xFFC98B12),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                iconColor: Colors.white,
-                textColor: Colors.white,
+                accentColor: Colors.white,
                 onTap: () => context.push('/spare-parts'),
               ),
             ),
-
-            // ── Vertical divider ────────────────────────────────────────
-            Container(
-              width: 1,
-              margin: const EdgeInsets.symmetric(vertical: 4),
-              color: AppColors.divider,
-            ),
-
-            // ── Right: Mechanical Services ──────────────────────────────
+            const SizedBox(width: AppSizes.spaceSm),
             Expanded(
               child: _SplitTile(
-                label: 'MECHANICAL\nSERVICES',
-                icon: Icons.build_rounded,
+                title: 'Mechanical\nServices',
+                subtitle: 'Repairs and diagnostics',
+                icon: Icons.engineering_rounded,
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF1A1A2E), Color(0xFF2D2D52)],
+                  colors: [
+                    Color(0xFF15172B),
+                    Color(0xFF24294F),
+                    Color(0xFF343A67),
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                iconColor: AppColors.gold,
-                textColor: Colors.white,
+                accentColor: AppColors.gold,
                 onTap: () => context.push('/mechanical-services'),
               ),
             ),
@@ -64,60 +63,117 @@ class HomeSplitSection extends StatelessWidget {
 
 class _SplitTile extends StatelessWidget {
   const _SplitTile({
-    required this.label,
+    required this.title,
+    required this.subtitle,
     required this.icon,
     required this.gradient,
-    required this.iconColor,
-    required this.textColor,
+    required this.accentColor,
     required this.onTap,
   });
 
-  final String label;
+  final String title;
+  final String subtitle;
   final IconData icon;
   final LinearGradient gradient;
-  final Color iconColor;
-  final Color textColor;
+  final Color accentColor;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 140,
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.12),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 48, color: iconColor),
-            const SizedBox(height: AppSizes.spaceSm),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.headingSmall.copyWith(
-                color: textColor,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.8,
-                height: 1.3,
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.12),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
               ),
-            ),
-            const SizedBox(height: AppSizes.spaceXs),
-            Icon(
-              Icons.arrow_forward_rounded,
-              size: 16,
-              color: textColor.withValues(alpha: 0.7),
-            ),
-          ],
+            ],
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                right: -22,
+                top: -18,
+                child: Icon(
+                  icon,
+                  size: 104,
+                  color: Colors.white.withValues(alpha: 0.10),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.26),
+                        ),
+                      ),
+                      child: Icon(icon, size: 25, color: accentColor),
+                    ),
+                    const Spacer(),
+                    Text(
+                      title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.headingSmall.copyWith(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w900,
+                        height: 1.12,
+                      ),
+                    ),
+                    const SizedBox(height: AppSizes.spaceXs),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            subtitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: Colors.white.withValues(alpha: 0.78),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: AppSizes.spaceXs),
+                        Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.18),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

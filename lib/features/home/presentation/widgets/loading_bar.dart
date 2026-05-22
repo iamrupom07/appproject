@@ -62,7 +62,7 @@ class _LoadingBarState extends State<LoadingBar>
 
   @override
   Widget build(BuildContext context) {
-    final trackColor = widget.backgroundColor ?? Colors.white.withOpacity(0.15);
+    final trackColor = widget.backgroundColor ?? Colors.white.withValues(alpha: 0.15);
 
     return AnimatedBuilder(
       animation: _progress,
@@ -89,7 +89,7 @@ class _LoadingBarState extends State<LoadingBar>
                     borderRadius: BorderRadius.circular(widget.borderRadius),
                     boxShadow: [
                       BoxShadow(
-                        color: widget.color.withOpacity(0.6),
+                        color: widget.color.withValues(alpha: 0.6),
                         blurRadius: 6,
                         spreadRadius: 1,
                       ),

@@ -190,7 +190,7 @@ class _BackButton extends StatelessWidget {
         width: 38,
         height: 38,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.40),
+          color: Colors.black.withValues(alpha: 0.40),
           shape: BoxShape.circle,
         ),
         child: const Icon(

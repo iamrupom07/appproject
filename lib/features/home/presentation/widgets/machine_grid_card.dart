@@ -8,8 +8,8 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../../core/utils/messenger_launcher.dart';
+import '../../../../../core/widgets/messenger_logo.dart';
 import '../../../../../core/widgets/stock_badge.dart';
-import '../../domain/machine_model.dart';
 import '../../domain/machine_model.dart';
 import '../providers/home_providers.dart';
 
@@ -269,11 +269,7 @@ class _ContactButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.messenger_rounded,
-              size: 13,
-              color: AppColors.textSecondary,
-            ),
+            const MessengerLogo(size: 15),
             const SizedBox(width: 4),
             Text(
               'Contact',

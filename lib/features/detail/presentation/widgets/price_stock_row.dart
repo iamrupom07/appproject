@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../../core/utils/messenger_launcher.dart';
+import '../../../../../core/widgets/messenger_logo.dart';
 import '../../../home/domain/machine_model.dart';
-import '../../../contact/domain/contact_model.dart';
 
 /// "Upon Request" price label (tappable → opens Messenger directly) + stock pill.
 class PriceStockRow extends StatelessWidget {
@@ -19,18 +18,12 @@ class PriceStockRow extends StatelessWidget {
   final StockStatus status;
   final String machineName;
 
-  Future<void> _openMessenger(BuildContext context) async {
+  Future<void> _openMessenger() async {
     // Try deep link with pre-filled message, fall back to openMessenger()
     final message = machineName.isNotEmpty
         ? 'Hi! I would like to get a quotation for: $machineName'
         : 'Hi! I would like to get a quotation for one of your machines.';
-    final encoded = Uri.encodeComponent(message);
-    final uri = Uri.parse('${ContactData.messengerDeepLink}?text=$encoded');
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      await openMessenger();
-    }
+    await openMessenger(message: message);
   }
 
   @override
@@ -40,7 +33,7 @@ class PriceStockRow extends StatelessWidget {
       children: [
         // ── Tappable price area ──────────────────────────────────────────────
         GestureDetector(
-          onTap: () => _openMessenger(context),
+          onTap: _openMessenger,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -68,11 +61,7 @@ class PriceStockRow extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
-                          Icons.messenger_rounded,
-                          color: Colors.white,
-                          size: 11,
-                        ),
+                        const MessengerLogo(size: 13),
                         const SizedBox(width: 4),
                         Text(
                           'Get Quotation',

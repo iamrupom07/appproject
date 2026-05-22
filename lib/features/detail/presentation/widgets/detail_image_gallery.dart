@@ -151,7 +151,7 @@ class _CounterBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.45),
+        color: Colors.black.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(AppSizes.radiusPill),
       ),
       child: Text(
@@ -176,7 +176,7 @@ class _View3DButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.45),
+          color: Colors.black.withValues(alpha: 0.45),
           borderRadius: BorderRadius.circular(AppSizes.radiusPill),
         ),
         child: Row(

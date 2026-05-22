@@ -30,7 +30,7 @@ class RecentlyAddedCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusMd),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -67,7 +67,7 @@ class RecentlyAddedCard extends ConsumerWidget {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.black.withOpacity(0.15),
+                      Colors.black.withValues(alpha: 0.15),
                     ],
                   ),
                 ),
@@ -106,7 +106,7 @@ class RecentlyAddedCard extends ConsumerWidget {
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.35),
+                    color: Colors.black.withValues(alpha: 0.35),
                     shape: BoxShape.circle,
                   ),
                   child: AnimatedSwitcher(

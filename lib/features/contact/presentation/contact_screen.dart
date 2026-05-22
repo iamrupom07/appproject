@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/utils/messenger_launcher.dart';
+import '../../../core/widgets/messenger_logo.dart';
 import '../domain/contact_model.dart';
 import 'widgets/business_hours_card.dart';
 import 'widgets/contact_action_card.dart';
@@ -242,7 +242,7 @@ class _ActionCardsRow extends StatelessWidget {
           // Messenger card (gold)
           ContactActionCard(
             backgroundColor: AppColors.gold,
-            iconWidget: const _FbMessengerIcon(color: Colors.white, size: 22),
+            iconWidget: const MessengerLogo(size: 24),
             label: 'Chat on',
             title: 'Messenger',
             subtitle: 'Get quick response',
@@ -271,20 +271,6 @@ class _ActionCardsRow extends StatelessWidget {
   }
 }
 
-
 // ─── Facebook Messenger Icon ──────────────────────────────────────────────────
 
-/// Custom painter that draws the Facebook Messenger lightning-bolt logo.
-class _FbMessengerIcon extends StatelessWidget {
-  const _FbMessengerIcon({required this.color, this.size = 24});
-
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    // Use the built-in messenger icon as close approximation —
-    // for a pixel-perfect FB logo replace with an SVG asset.
-    return Icon(Icons.messenger_rounded, size: size, color: color);
-  }
-}
+// Use the built-in messenger icon as close approximation —

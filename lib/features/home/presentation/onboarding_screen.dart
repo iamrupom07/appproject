@@ -292,7 +292,7 @@ class _BottomBar extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.textPrimary.withOpacity(0.25),
+                    color: AppColors.textPrimary.withValues(alpha: 0.25),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -328,7 +328,7 @@ class _GetStartedButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusPill),
           boxShadow: [
             BoxShadow(
-              color: AppColors.gold.withOpacity(0.40),
+              color: AppColors.gold.withValues(alpha: 0.40),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),

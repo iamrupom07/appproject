@@ -109,7 +109,7 @@ class _AnimatedLogoState extends State<AnimatedLogo>
           style: GoogleFonts.outfit(
             fontSize: widget.subbrandFontSize,
             fontWeight: FontWeight.w400,
-            color: widget.textColor.withOpacity(0.65),
+            color: widget.textColor.withValues(alpha: 0.65),
             letterSpacing: 3.5,
           ),
         ),

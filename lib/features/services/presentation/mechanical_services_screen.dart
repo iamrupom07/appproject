@@ -5,6 +5,7 @@ import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/utils/messenger_launcher.dart';
+import '../../../core/widgets/messenger_logo.dart';
 import 'widgets/service_media_section.dart';
 
 class MechanicalServicesScreen extends StatelessWidget {
@@ -13,7 +14,8 @@ class MechanicalServicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent),
+      value: SystemUiOverlayStyle.dark
+          .copyWith(statusBarColor: Colors.transparent),
       child: Scaffold(
         backgroundColor: AppColors.pageBackground,
         body: SafeArea(
@@ -44,9 +46,8 @@ class MechanicalServicesScreen extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(
-                      AppSizes.spaceMd, AppSizes.spaceMd,
-                      AppSizes.spaceMd, AppSizes.spaceMd),
+                  padding: const EdgeInsets.fromLTRB(AppSizes.spaceMd,
+                      AppSizes.spaceMd, AppSizes.spaceMd, AppSizes.spaceMd),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -76,8 +77,8 @@ class MechanicalServicesScreen extends StatelessWidget {
                         'downtime and keeping your fleet operational.\n\n'
                         'Call or message us now to schedule a service visit or get a '
                         'free diagnostic assessment.',
-                        style: AppTextStyles.bodyMedium
-                            .copyWith(height: 1.6, color: AppColors.textSecondary),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                            height: 1.6, color: AppColors.textSecondary),
                       ),
                       // Bottom padding to clear the action bar
                       const SizedBox(height: 90),
@@ -129,7 +130,7 @@ class _ServiceActionBar extends StatelessWidget {
             Expanded(
               child: _ActionBarButton(
                 onTap: onMessengerTap,
-                icon: const _MessengerIcon(),
+                icon: const MessengerLogo(size: 22),
                 label: 'Messenger',
                 backgroundColor: const Color(0xFF0084FF),
                 foregroundColor: Colors.white,
@@ -199,12 +200,3 @@ class _ActionBarButton extends StatelessWidget {
 }
 
 // ─── Messenger Icon (Facebook gradient bolt) ──────────────────────────────────
-
-class _MessengerIcon extends StatelessWidget {
-  const _MessengerIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(Icons.messenger_rounded, size: 22, color: Colors.white);
-  }
-}

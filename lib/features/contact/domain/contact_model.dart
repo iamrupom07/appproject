@@ -50,7 +50,15 @@ class SocialLink {
   final String url;
 }
 
-enum SocialPlatform { facebook, instagram, linkedin, youtube, tiktok, whatsapp }
+enum SocialPlatform {
+  facebook,
+  messenger,
+  instagram,
+  linkedin,
+  youtube,
+  tiktok,
+  whatsapp
+}
 
 /// ── Static seed data ────────────────────────────────────────────────────────
 /// Replace with a repository / provider fetch when a backend exists.
@@ -78,11 +86,29 @@ class ContactData {
     BusinessHour(label: 'Sunday', hours: '8:00 AM – 8:00 PM', isOpen: true),
   ];
 
+  /// Facebook Messenger deep-link. The m.me URL is the most reliable public
+  /// hand-off because it opens Messenger when installed and falls back to web.
+  static const String messengerDeepLink =
+      'fb-messenger://user-thread/abrozmachinery';
+  static const String messengerWebUrl = 'https://m.me/abrozmachinery';
+  static const String messengerFallbackUrl =
+      'https://www.facebook.com/abrozmachinery/';
+
+  /// Legacy alias kept for widgets that still reference [messengerUrl].
+  static const String messengerUrl = messengerWebUrl;
+
+  static const String phoneNumber = 'tel:+639175100030';
+
   static const List<SocialLink> socialLinks = [
     SocialLink(
       platform: SocialPlatform.facebook,
       handle: '@abrozmachinery',
       url: 'https://facebook.com/abrozmachinery',
+    ),
+    SocialLink(
+      platform: SocialPlatform.messenger,
+      handle: 'm.me/abrozmachinery',
+      url: messengerWebUrl,
     ),
     SocialLink(
       platform: SocialPlatform.facebook,
@@ -95,16 +121,4 @@ class ContactData {
       url: 'https://wa.me/639175100030',
     ),
   ];
-
-  /// Facebook Messenger deep-link. Falls back to the Facebook page URL
-  /// if the Messenger app is not installed.
-  static const String messengerDeepLink =
-      'fb-messenger://user-thread/abrozmachinery';
-  static const String messengerFallbackUrl =
-      'https://www.facebook.com/abrozmachinery/';
-
-  /// Legacy alias kept for widgets that still reference [messengerUrl].
-  static const String messengerUrl = messengerDeepLink;
-
-  static const String phoneNumber = 'tel:+639175100030';
 }

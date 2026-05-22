@@ -27,7 +27,7 @@ class FilterFab extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSizes.radiusPill),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.10),
+              color: Colors.black.withValues(alpha: 0.10),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
