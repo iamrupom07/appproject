@@ -2,11 +2,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../features/contact/domain/contact_model.dart';
 
 /// Opens Facebook Messenger for the Abroz page.
-/// Tries the app deep-link first, then m.me, then the Facebook page.
+/// Tries the public m.me handoff first, then the app deep-link, then Facebook.
 Future<void> openMessenger({String? message}) async {
   final links = <Uri>[
-    _messengerDeepLink(message),
     Uri.parse(ContactData.messengerWebUrl),
+    _messengerDeepLink(message),
     Uri.parse(ContactData.messengerFallbackUrl),
   ];
 
@@ -24,7 +24,7 @@ Future<void> callAbroz() async {
 }
 
 Uri _messengerDeepLink(String? message) {
-  final base = ContactData.messengerDeepLink;
+  const base = ContactData.messengerDeepLink;
   if (message == null || message.trim().isEmpty) {
     return Uri.parse(base);
   }

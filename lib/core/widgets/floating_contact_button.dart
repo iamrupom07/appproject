@@ -7,10 +7,15 @@ import '../constants/app_text_styles.dart';
 import '../utils/messenger_launcher.dart';
 import 'messenger_logo.dart';
 
-/// Persistent gold FAB shown on every main screen.
-/// Tapping it opens a compact bottom sheet with Call and Message options.
+/// Persistent gold Messenger FAB shown on every main screen.
+/// Tapping it opens Messenger; long-pressing opens Call and Message options.
 class FloatingContactButton extends StatelessWidget {
   const FloatingContactButton({super.key});
+
+  Future<void> _openMessenger() async {
+    HapticFeedback.lightImpact();
+    await openMessenger();
+  }
 
   void _openSheet(BuildContext context) {
     HapticFeedback.lightImpact();
@@ -25,7 +30,8 @@ class FloatingContactButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _openSheet(context),
+      onTap: _openMessenger,
+      onLongPress: () => _openSheet(context),
       child: Container(
         width: AppSizes.fabSize,
         height: AppSizes.fabSize,
