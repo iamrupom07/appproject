@@ -2,7 +2,7 @@ import 'package:abroz_parts_plus/features/home/domain/machine_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../features/home/domain/machine_model.dart';
-import '../../data/mock_inventory.dart';
+import '../../../../features/products/data/product_providers.dart';
 import '../../domain/inventory_filter_model.dart';
 import '../../domain/inventory_machine_model.dart';
 
@@ -28,15 +28,11 @@ class InventoryFiltersNotifier extends StateNotifier<InventoryFilters> {
   InventoryFiltersNotifier() : super(const InventoryFilters());
 
   void setBrand(BrandFilter brand) => state = state.copyWith(brand: brand);
-
   void setCondition(ConditionFilter condition) =>
       state = state.copyWith(condition: condition);
-
   void setAvailability(AvailabilityFilter availability) =>
       state = state.copyWith(availability: availability);
-
   void setSort(SortOption sort) => state = state.copyWith(sort: sort);
-
   void reset() => state = const InventoryFilters();
 }
 
@@ -45,15 +41,29 @@ final inventoryFiltersProvider =
   (ref) => InventoryFiltersNotifier(),
 );
 
-// ─── Source of Truth ──────────────────────────────────────────────────────────
+// ─── Source of Truth (real API) ───────────────────────────────────────────────
 
-final allInventoryProvider = Provider<List<InventoryMachineModel>>(
-  (ref) => kInventoryMachines,
+final allInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
+  return ref
+      .watch(allInventoryFromApiProvider)
+      .whenOrNull(data: (list) => list) ??
+      [];
+});
+
+// ─── Loading / error pass-throughs ───────────────────────────────────────────
+
+final inventoryLoadingProvider = Provider<bool>(
+  (ref) => ref.watch(allProductsProvider).isLoading,
+);
+
+final inventoryErrorProvider = Provider<String?>(
+  (ref) => ref.watch(allProductsProvider).whenOrNull(
+        error: (e, _) => e.toString(),
+      ),
 );
 
 // ─── Filtered + Sorted List (derived) ────────────────────────────────────────
 
-/// Recomputes whenever category, search, or filters change.
 final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
   final all = ref.watch(allInventoryProvider);
   final category = ref.watch(inventoryCategoryProvider);
@@ -73,12 +83,13 @@ final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
         .where(
           (m) =>
               m.name.toLowerCase().contains(query) ||
-              m.subtitle.toLowerCase().contains(query),
+              m.subtitle.toLowerCase().contains(query) ||
+              m.partNumber.toLowerCase().contains(query),
         )
         .toList();
   }
 
-  // ── Availability filter ───────────────────────────────────────────────────
+  // ── Availability ──────────────────────────────────────────────────────────
   if (filters.availability != AvailabilityFilter.all) {
     final target = switch (filters.availability) {
       AvailabilityFilter.inStock => StockStatus.inStock,
@@ -91,11 +102,21 @@ final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
     }
   }
 
-  // ── Brand filter (name-based, swap for brand field when model has one) ────
+  // ── Brand filter ──────────────────────────────────────────────────────────
   if (filters.brand != BrandFilter.all) {
     list = list
+        .where((m) => m.name
+            .toLowerCase()
+            .contains(filters.brand.label.toLowerCase()))
+        .toList();
+  }
+
+  // ── Condition filter ──────────────────────────────────────────────────────
+  if (filters.condition != ConditionFilter.all) {
+    list = list
         .where((m) =>
-            m.name.toLowerCase().contains(filters.brand.label.toLowerCase()))
+            m.condition.toLowerCase() ==
+            filters.condition.label.toLowerCase())
         .toList();
   }
 
@@ -108,7 +129,6 @@ final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
       list = [...list]
         ..sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
     case SortOption.newest:
-      // newest first — reverse insertion order (mock data is already newest last)
       list = list.reversed.toList();
     case SortOption.relevance:
       break;

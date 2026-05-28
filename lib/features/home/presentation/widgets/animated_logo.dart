@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 
 /// Reusable ABROZ brand logo with optional entrance animation.
 ///
-/// Displays the gold "A" triangular mark, the wordmark "ABROZ",
+/// Displays the app logo asset, the wordmark "ABROZ",
 /// and the sub-brand line "MACHINERY INC." with letter-spacing.
 ///
 /// Set [animate] to false for static use (e.g., in an AppBar or About page).
@@ -23,7 +22,6 @@ class AnimatedLogo extends StatefulWidget {
     this.logoSize = 80.0,
     this.wordmarkFontSize = 40.0,
     this.subbrandFontSize = 12.0,
-    this.color = AppColors.gold,
     this.textColor = Colors.white,
   });
 
@@ -32,7 +30,6 @@ class AnimatedLogo extends StatefulWidget {
   final double logoSize;
   final double wordmarkFontSize;
   final double subbrandFontSize;
-  final Color color;
   final Color textColor;
 
   @override
@@ -88,8 +85,13 @@ class _AnimatedLogoState extends State<AnimatedLogo>
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Gold "A" mark
-        _AbrozAMark(size: widget.logoSize, color: widget.color),
+        // ABROZ logo image
+        Image.asset(
+          'assets/icons/app_icon.png',
+          width: widget.logoSize,
+          height: widget.logoSize,
+          fit: BoxFit.contain,
+        ),
         SizedBox(height: AppSizes.spaceMd),
         // Wordmark
         Text(
@@ -126,69 +128,4 @@ class _AnimatedLogoState extends State<AnimatedLogo>
       ),
     );
   }
-}
-
-/// The triangular "A" logo mark rendered purely with CustomPaint —
-/// no asset dependency, always crisp at any size.
-class _AbrozAMark extends StatelessWidget {
-  const _AbrozAMark({required this.size, required this.color});
-
-  final double size;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(size * 0.85, size),
-      painter: _AMarkPainter(color: color),
-    );
-  }
-}
-
-class _AMarkPainter extends CustomPainter {
-  _AMarkPainter({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-
-    final w = size.width;
-    final h = size.height;
-
-    // Outer triangle
-    final outer = Path()
-      ..moveTo(w / 2, 0)
-      ..lineTo(w, h)
-      ..lineTo(0, h)
-      ..close();
-
-    // Inner cutout (upside-down triangle — the negative space of the "A")
-    final cutoutTop = h * 0.52;
-    final cutoutW = w * 0.28;
-    final inner = Path()
-      ..moveTo(w / 2, cutoutTop - h * 0.14)
-      ..lineTo(w / 2 + cutoutW, h - h * 0.08)
-      ..lineTo(w / 2 - cutoutW, h - h * 0.08)
-      ..close();
-
-    // Horizontal crossbar cutout
-    final barTop = h * 0.56;
-    final barBottom = h * 0.645;
-    final barLeft = w * 0.22;
-    final barRight = w * 0.78;
-    final bar = Path()
-      ..addRect(Rect.fromLTRB(barLeft, barTop, barRight, barBottom));
-
-    final combined = Path.combine(PathOperation.difference, outer, inner);
-    final withBar = Path.combine(PathOperation.difference, combined, bar);
-
-    canvas.drawPath(withBar, paint);
-  }
-
-  @override
-  bool shouldRepaint(_AMarkPainter old) => old.color != color;
 }

@@ -46,7 +46,7 @@ flutter_launcher_icons:
   # Adaptive icon: a foreground layer (logo) over a coloured background layer.
   # This gives the modern rounded/squircle look on Android 8+.
   adaptive_icon_foreground: "assets/icons/app_icon_adaptive_fg.png"
-  adaptive_icon_background: "#1A1A2E" # Deep Charcoal — AB & Abroz brand dark
+  adaptive_icon_background: "#FFFFFF"
 
   # ── iOS ────────────────────────────────────────────────────────────────────
   ios: true
@@ -56,7 +56,7 @@ flutter_launcher_icons:
   web:
     generate: true
     image_path: "assets/icons/app_icon.png"
-    background_color: "#1A1A2E"
+    background_color: "#FFFFFF"
     theme_color: "#E8B84B" # Gold accent
 
   # ── Windows desktop ───────────────────────────────────────────────────────

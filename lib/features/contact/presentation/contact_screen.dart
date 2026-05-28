@@ -201,23 +201,13 @@ class _SupportButton extends StatelessWidget {
 class _LogoBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 52,
       height: 52,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: AppColors.darkBackground,
-        border: Border.all(color: AppColors.gold, width: 2.5),
-      ),
-      child: Center(
-        child: Text(
-          'A',
-          style: AppTextStyles.displayMedium.copyWith(
-            color: AppColors.gold,
-            fontSize: 22,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
+      child: Image.asset(
+        'assets/icons/app_icon.png',
+        fit: BoxFit.contain,
+        semanticLabel: 'ABROZ logo',
       ),
     );
   }

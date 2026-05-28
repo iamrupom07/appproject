@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../data/mock_machines.dart';
+import '../../../../features/products/data/product_providers.dart';
 import '../../domain/machine_model.dart';
 
 // ─── Selected Category ────────────────────────────────────────────────────────
 
 final selectedCategoryProvider =
-StateProvider<MachineCategory>((ref) => MachineCategory.all);
+    StateProvider<MachineCategory>((ref) => MachineCategory.all);
 
 // ─── Search Query ─────────────────────────────────────────────────────────────
 
@@ -46,18 +46,34 @@ class FavoritesNotifier extends StateNotifier<Set<String>> {
 }
 
 final favoritesProvider = StateNotifierProvider<FavoritesNotifier, Set<String>>(
-      (ref) => FavoritesNotifier(),
+  (ref) => FavoritesNotifier(),
 );
 
-// ─── All Machines (source of truth) ──────────────────────────────────────────
+// ─── All Machines (source of truth — real API) ────────────────────────────────
 
-final allMachinesProvider = Provider<List<MachineModel>>(
-      (ref) => kMockMachines,
-);
+/// Wraps the async API result so downstream providers can stay synchronous.
+/// On error / loading returns [].
+final allMachinesProvider = Provider<List<MachineModel>>((ref) {
+  return ref
+      .watch(allMachinesFromApiProvider)
+      .whenOrNull(data: (list) => list) ??
+      [];
+});
 
-// ─── Filtered Machines (derived) ─────────────────────────────────────────────
+// ─── API loading / error state (for UI skeletons) ────────────────────────────
 
-/// Derived provider — recomputes automatically when category or search changes.
+final machinesLoadingProvider = Provider<bool>((ref) {
+  return ref.watch(allProductsProvider).isLoading;
+});
+
+final machinesErrorProvider = Provider<String?>((ref) {
+  return ref.watch(allProductsProvider).whenOrNull(
+        error: (e, _) => e.toString(),
+      );
+});
+
+// ─── Filtered Machines (derived) ──────────────────────────────────────────────
+
 final filteredMachinesProvider = Provider<List<MachineModel>>((ref) {
   final all = ref.watch(allMachinesProvider);
   final category = ref.watch(selectedCategoryProvider);
@@ -73,48 +89,47 @@ final filteredMachinesProvider = Provider<List<MachineModel>>((ref) {
     list = list
         .where(
           (m) =>
-      m.name.toLowerCase().contains(query) ||
-          m.subtitle.toLowerCase().contains(query),
-    )
+              m.name.toLowerCase().contains(query) ||
+              m.subtitle.toLowerCase().contains(query),
+        )
         .toList();
   }
 
   return list;
 });
 
-// ─── Featured Machines (hero carousel) ────────────────────────────────────────
+// ─── Featured Machines ────────────────────────────────────────────────────────
 
+/// Shows the first 4 in-stock products as featured.
 final featuredMachinesProvider = Provider<List<MachineModel>>((ref) {
   return ref
       .watch(allMachinesProvider)
-      .where((m) => m.isFeatured)
+      .where((m) => m.status == StockStatus.inStock)
       .take(4)
       .toList();
 });
 
 // ─── Trending Machines ────────────────────────────────────────────────────────
 
-/// Non-featured machines ordered to show in-stock first, then low-stock.
 final trendingMachinesProvider = Provider<List<MachineModel>>((ref) {
   final all = ref.watch(allMachinesProvider);
-  final nonFeatured = all.where((m) => !m.isFeatured).toList()
+  final sorted = [...all]
     ..sort((a, b) => a.status.index.compareTo(b.status.index));
-  return nonFeatured.take(3).toList();
+  return sorted.take(6).toList();
 });
 
-// ─── Recently Added Machines ──────────────────────────────────────────────────
+// ─── Recently Added ───────────────────────────────────────────────────────────
 
 final recentlyAddedProvider = Provider<List<MachineModel>>((ref) {
   return ref
       .watch(allMachinesProvider)
       .where((m) => m.isRecentlyAdded)
-      .take(3)
+      .take(6)
       .toList();
 });
 
 // ─── Favorites Screen Providers ───────────────────────────────────────────────
 
-/// Sort options available on the Favorites screen.
 enum FavoritesSort {
   recent('Recently Added'),
   priceAsc('Price: Low to High'),
@@ -125,28 +140,22 @@ enum FavoritesSort {
   final String label;
 }
 
-/// Persists the currently selected sort order for the Favorites screen.
 final favoritesSortProvider =
-StateProvider<FavoritesSort>((ref) => FavoritesSort.recent);
+    StateProvider<FavoritesSort>((ref) => FavoritesSort.recent);
 
-/// Derives the full [MachineModel] list from the saved ID set, then applies
-/// the selected sort. Recomputes automatically whenever favorites or sort changes.
 final favoritedMachinesProvider = Provider<List<MachineModel>>((ref) {
   final ids = ref.watch(favoritesProvider);
   final all = ref.watch(allMachinesProvider);
   final sort = ref.watch(favoritesSortProvider);
 
-  // Preserve insertion order by filtering all machines
   var list = all.where((m) => ids.contains(m.id)).toList();
 
   switch (sort) {
     case FavoritesSort.recent:
-    // Keep natural insertion order (no-op; ids is a Set so order tracks adds)
       break;
     case FavoritesSort.priceAsc:
-    // price sort removed — pricing is upon request
     case FavoritesSort.priceDesc:
-    // price sort removed — pricing is upon request
+      break;
     case FavoritesSort.category:
       list.sort((a, b) => a.category.label.compareTo(b.category.label));
   }
