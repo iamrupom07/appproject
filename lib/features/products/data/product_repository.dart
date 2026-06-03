@@ -13,7 +13,7 @@ class ProductQuery {
     this.categoryId,
     this.status = 'active',
     this.page = 1,
-    this.limit = 50,
+    this.limit = 100,
   });
 
   final String? search;
@@ -39,7 +39,21 @@ class ProductRepository {
   const ProductRepository(this._dio);
   final Dio _dio;
 
-  /// Fetch all products — returns data + meta for pagination.
+  // ── GET /product ─────────────────────────────────────────────────────────
+
+  /// Fetch products from the backend.
+  ///
+  /// Backend response shape (from QueryBuilder + sendResponse):
+  /// ```json
+  /// {
+  ///   "success": true,
+  ///   "message": "...",
+  ///   "data": {
+  ///     "data": [ { ...product }, ... ],
+  ///     "meta": { "page": 1, "limit": 100, "total": 42, "totalPages": 1 }
+  ///   }
+  /// }
+  /// ```
   Future<({List<ProductDto> products, ApiMeta? meta})> getProducts(
     ProductQuery query,
   ) async {
@@ -49,65 +63,71 @@ class ProductRepository {
     );
 
     final body = res.data!;
-    final meta = body['meta'] != null
-        ? ApiMeta.fromJson(body['meta'] as Map<String, dynamic>)
-        : null;
 
-    final rawData = body['data'];
-    List<dynamic> rawList;
+    // The QueryBuilder wraps its result in a nested { data: [...], meta: {...} }
+    // inside the outer sendResponse data field.
+    final outerData = body['data'];
+    List<dynamic> rawList = [];
+    ApiMeta? meta;
 
-    // QueryBuilder wraps results in { data: [...], meta: {...} }
-    if (rawData is Map<String, dynamic> && rawData.containsKey('data')) {
-      rawList = rawData['data'] as List<dynamic>;
-      // meta may also live inside data
-      final innerMeta = rawData['meta'];
-      if (innerMeta != null && meta == null) {
-        // use inner meta (ignore outer if null)
+    if (outerData is Map<String, dynamic>) {
+      final innerData = outerData['data'];
+      if (innerData is List) {
+        rawList = innerData;
+      } else if (innerData is Map<String, dynamic>) {
+        // edge case: single object wrapped in data
+        rawList = [innerData];
       }
-    } else if (rawData is List) {
-      rawList = rawData;
-    } else {
-      rawList = [];
+      final rawMeta = outerData['meta'];
+      if (rawMeta is Map<String, dynamic>) {
+        meta = ApiMeta.fromJson(rawMeta);
+      }
+    } else if (outerData is List) {
+      rawList = outerData;
     }
 
-    final products =
-        rawList.map((e) => ProductDto.fromJson(e as Map<String, dynamic>)).toList();
+    final products = rawList
+        .whereType<Map<String, dynamic>>()
+        .map(ProductDto.fromJson)
+        .toList();
 
     return (products: products, meta: meta);
   }
 
-  /// Fetch a single product by id.
+  // ── GET /product/:id ─────────────────────────────────────────────────────
+
   Future<ProductDto> getSingleProduct(String id) async {
     final res = await _dio.get<Map<String, dynamic>>('/product/$id');
-    final raw = _extractData(res.data!);
+    final body = res.data!;
+    final raw = _unwrap(body['data']);
     return ProductDto.fromJson(raw as Map<String, dynamic>);
   }
 
-  /// Fetch all categories.
+  // ── GET /category ─────────────────────────────────────────────────────────
+
   Future<List<CategoryDto>> getCategories() async {
     final res = await _dio.get<Map<String, dynamic>>('/category');
     final body = res.data!;
 
-    final rawData = body['data'];
-    List<dynamic> rawList;
+    final outerData = body['data'];
+    List<dynamic> rawList = [];
 
-    if (rawData is Map<String, dynamic> && rawData.containsKey('data')) {
-      rawList = rawData['data'] as List<dynamic>;
-    } else if (rawData is List) {
-      rawList = rawData;
-    } else {
-      rawList = [];
+    if (outerData is Map<String, dynamic>) {
+      final inner = outerData['data'];
+      if (inner is List) rawList = inner;
+    } else if (outerData is List) {
+      rawList = outerData;
     }
 
     return rawList
-        .map((e) => CategoryDto.fromJson(e as Map<String, dynamic>))
+        .whereType<Map<String, dynamic>>()
+        .map(CategoryDto.fromJson)
         .toList();
   }
 
   // ── Private ────────────────────────────────────────────────────────────────
 
-  dynamic _extractData(Map<String, dynamic> body) {
-    final data = body['data'];
+  dynamic _unwrap(dynamic data) {
     if (data is Map<String, dynamic> && data.containsKey('data')) {
       return data['data'];
     }
@@ -115,7 +135,7 @@ class ProductRepository {
   }
 }
 
-// ─── Providers ────────────────────────────────────────────────────────────────
+// ─── Provider ─────────────────────────────────────────────────────────────────
 
 final productRepositoryProvider = Provider<ProductRepository>(
   (ref) => ProductRepository(ref.watch(dioProvider)),

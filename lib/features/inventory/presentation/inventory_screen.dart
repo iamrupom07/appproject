@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:shimmer/shimmer.dart';
+
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/utils/messenger_launcher.dart';
@@ -21,13 +23,12 @@ import 'widgets/inventory_search_bar.dart';
 class InventoryScreen extends ConsumerWidget {
   const InventoryScreen({super.key});
 
-  // Total catalogue size shown in the header subtitle
-  static const int _totalMachines = 128;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final machines = ref.watch(filteredInventoryProvider);
     final viewMode = ref.watch(inventoryViewModeProvider);
+    final isLoading = ref.watch(inventoryLoadingProvider);
+    final apiError = ref.watch(inventoryErrorProvider);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
@@ -56,7 +57,7 @@ class InventoryScreen extends ConsumerWidget {
                       0,
                     ),
                     child: InventoryHeaderBar(
-                      machineCount: _totalMachines,
+                      machineCount: machines.length,
                     ),
                   ),
                 ),
@@ -114,8 +115,70 @@ class InventoryScreen extends ConsumerWidget {
                   child: SizedBox(height: AppSizes.spaceMd),
                 ),
 
+                // ── Error banner ──────────────────────────────────────────
+                if (apiError != null)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: AppSizes.spaceMd),
+                      child: Container(
+                        padding: const EdgeInsets.all(AppSizes.spaceMd),
+                        margin:
+                            const EdgeInsets.only(bottom: AppSizes.spaceMd),
+                        decoration: BoxDecoration(
+                          color: AppColors.outOfStock.withValues(alpha: 0.1),
+                          borderRadius:
+                              BorderRadius.circular(AppSizes.radiusSm),
+                          border: Border.all(
+                              color: AppColors.outOfStock
+                                  .withValues(alpha: 0.3)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.wifi_off_rounded,
+                                color: AppColors.outOfStock, size: 18),
+                            const SizedBox(width: AppSizes.spaceSm),
+                            const Expanded(
+                              child: Text(
+                                'Could not load inventory. Check your connection.',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
                 // ── Machine grid or list ───────────────────────────────────
-                if (machines.isEmpty)
+                if (isLoading)
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(
+                        AppSizes.spaceMd, 0, AppSizes.spaceMd, 96),
+                    sliver: SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: AppSizes.spaceMd,
+                        mainAxisSpacing: AppSizes.spaceMd,
+                        childAspectRatio: 0.62,
+                      ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, _) => Shimmer.fromColors(
+                          baseColor: AppColors.shimmerBase,
+                          highlightColor: AppColors.shimmerHighlight,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.shimmerBase,
+                              borderRadius:
+                                  BorderRadius.circular(AppSizes.radiusMd),
+                            ),
+                          ),
+                        ),
+                        childCount: 6,
+                      ),
+                    ),
+                  )
+                else if (machines.isEmpty)
                   const SliverFillRemaining(
                     hasScrollBody: false,
                     child: _EmptyState(),

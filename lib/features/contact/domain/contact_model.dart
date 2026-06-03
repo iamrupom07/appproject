@@ -1,5 +1,4 @@
 /// All plain-Dart value types for the Contact feature.
-/// Swap the static [ContactData.instance] for a real API call whenever ready.
 
 class OfficeInfo {
   const OfficeInfo({
@@ -61,12 +60,11 @@ enum SocialPlatform {
 }
 
 /// ── Static seed data ────────────────────────────────────────────────────────
-/// Replace with a repository / provider fetch when a backend exists.
 class ContactData {
   ContactData._();
 
   static const OfficeInfo office = OfficeInfo(
-    companyName: 'AB & KBROZ MACHINERY INC.',
+    companyName: 'AB & ABROZ MACHINERY INC.',
     addressLines: [
       'Jose Abad Santos Avenue,',
       'San Fernando, Pampanga,',
@@ -79,20 +77,18 @@ class ContactData {
         'https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=600&q=80',
   );
 
-  /// Business hours — open every day, 8 AM–8 PM.
   static const List<BusinessHour> businessHours = [
     BusinessHour(label: 'Mon – Fri', hours: '8:00 AM – 8:00 PM', isOpen: true),
     BusinessHour(label: 'Saturday', hours: '8:00 AM – 8:00 PM', isOpen: true),
     BusinessHour(label: 'Sunday', hours: '8:00 AM – 8:00 PM', isOpen: true),
   ];
 
-  /// Facebook Messenger deep-link. The m.me URL is the most reliable public
-  /// hand-off because it opens Messenger when installed and falls back to web.
+  // ── Messenger — Spare Parts page (primary for the app) ───────────────────
   static const String messengerDeepLink =
-      'fb-messenger://user-thread/abrozmachinery';
-  static const String messengerWebUrl = 'https://m.me/abrozmachinery';
+      'fb-messenger://user-thread/machinerysparepartsph';
+  static const String messengerWebUrl = 'https://m.me/machinerysparepartsph';
   static const String messengerFallbackUrl =
-      'https://www.facebook.com/abrozmachinery/';
+      'https://www.facebook.com/machinerysparepartsph';
 
   /// Legacy alias kept for widgets that still reference [messengerUrl].
   static const String messengerUrl = messengerWebUrl;
@@ -100,14 +96,16 @@ class ContactData {
   static const String phoneNumber = 'tel:+639175100030';
 
   static const List<SocialLink> socialLinks = [
+    // Main machinery page
     SocialLink(
       platform: SocialPlatform.facebook,
       handle: '@abrozmachinery',
       url: 'https://facebook.com/abrozmachinery',
     ),
+    // Spare parts page — Messenger opens this one
     SocialLink(
       platform: SocialPlatform.messenger,
-      handle: 'm.me/abrozmachinery',
+      handle: '@machinerysparepartsph',
       url: messengerWebUrl,
     ),
     SocialLink(
@@ -115,6 +113,7 @@ class ContactData {
       handle: '@machinerysparepartsph',
       url: 'https://www.facebook.com/machinerysparepartsph',
     ),
+    // WhatsApp — same number
     SocialLink(
       platform: SocialPlatform.whatsapp,
       handle: '+63 917 510 0030',

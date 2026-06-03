@@ -42,7 +42,6 @@ class ProductDto {
   final DateTime? createdAt;
 
   factory ProductDto.fromJson(Map<String, dynamic> json) {
-    // categoryId can be a String (id) or populated Object
     String? catId;
     String? catName;
     final cat = json['categoryId'];
@@ -98,11 +97,9 @@ class ProductDto {
     }
   }
 
-  StockStatus get stockStatus {
-    if (quantity <= 0) return StockStatus.outOfStock;
-    if (quantity <= 3) return StockStatus.lowStock;
-    return StockStatus.inStock;
-  }
+  /// Client requirement: all items are always shown as "In Stock" regardless
+  /// of the quantity value in the database.
+  StockStatus get stockStatus => StockStatus.inStock;
 
   MachineCategory get machineCategory {
     final name = (categoryName ?? '').toLowerCase();
@@ -117,8 +114,7 @@ class ProductDto {
   }
 
   bool get isNew =>
-      createdAt != null &&
-      DateTime.now().difference(createdAt!).inDays <= 14;
+      createdAt != null && DateTime.now().difference(createdAt!).inDays <= 14;
 
   /// Convert to the [MachineModel] used across the Home and Favorites screens.
   MachineModel toMachineModel() {
@@ -129,7 +125,7 @@ class ProductDto {
       category: machineCategory,
       status: stockStatus,
       imageUrl: primaryImage,
-      isFeatured: false, // backend has no featured flag yet — all false
+      isFeatured: false,
       isNew: isNew,
       isRecentlyAdded: isNew,
     );

@@ -1,4 +1,3 @@
-import 'package:abroz_parts_plus/features/home/domain/machine_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../features/home/domain/machine_model.dart';
@@ -45,8 +44,8 @@ final inventoryFiltersProvider =
 
 final allInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
   return ref
-      .watch(allInventoryFromApiProvider)
-      .whenOrNull(data: (list) => list) ??
+          .watch(allInventoryFromApiProvider)
+          .whenOrNull(data: (list) => list) ??
       [];
 });
 
@@ -105,9 +104,8 @@ final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
   // ── Brand filter ──────────────────────────────────────────────────────────
   if (filters.brand != BrandFilter.all) {
     list = list
-        .where((m) => m.name
-            .toLowerCase()
-            .contains(filters.brand.label.toLowerCase()))
+        .where((m) =>
+            m.name.toLowerCase().contains(filters.brand.label.toLowerCase()))
         .toList();
   }
 

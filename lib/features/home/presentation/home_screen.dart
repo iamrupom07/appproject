@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
@@ -21,6 +22,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final trending = ref.watch(trendingMachinesProvider);
     final recentlyAdded = ref.watch(recentlyAddedProvider);
+    final isLoading = ref.watch(machinesLoadingProvider);
+    final error = ref.watch(machinesErrorProvider);
     final dateLabel = DateFormat('EEEE, MMMM d, y').format(DateTime.now());
 
     return Scaffold(
@@ -41,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceMd)),
 
-          // ── Tappable search bar → navigates to /search ─────────────────
+          // ── Tappable search bar ────────────────────────────────────────
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
@@ -87,13 +90,44 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),
-
-          // ── Split Section: Spare Parts | Mechanical Services ────────────
           const SliverToBoxAdapter(child: HomeSplitSection()),
-
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),
           const SliverToBoxAdapter(child: CategoryTabRow()),
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),
+
+          // ── Error banner ───────────────────────────────────────────────
+          if (error != null)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSizes.spaceMd),
+                child: Container(
+                  padding: const EdgeInsets.all(AppSizes.spaceMd),
+                  decoration: BoxDecoration(
+                    color: AppColors.outOfStock.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(AppSizes.radiusSm),
+                    border: Border.all(
+                        color: AppColors.outOfStock.withValues(alpha: 0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.wifi_off_rounded,
+                          color: AppColors.outOfStock, size: 18),
+                      const SizedBox(width: AppSizes.spaceSm),
+                      Expanded(
+                        child: Text(
+                          'Could not load inventory. Check your connection.',
+                          style: AppTextStyles.bodySmall
+                              .copyWith(color: AppColors.outOfStock),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+          // ── Trending ───────────────────────────────────────────────────
           SliverToBoxAdapter(
             child: SectionHeader(
               title: 'Trending Inventory',
@@ -104,21 +138,28 @@ class HomeScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: 248,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding:
-                const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
-                itemCount: trending.length,
-                separatorBuilder: (_, __) =>
-                const SizedBox(width: AppSizes.spaceSm),
-                itemBuilder: (_, index) => SizedBox(
-                  width: 160,
-                  child: MachineGridCard(machine: trending[index]),
-                ),
-              ),
+              child: isLoading
+                  ? _HorizontalShimmer(itemWidth: 160, height: 248)
+                  : trending.isEmpty
+                      ? _EmptySection(message: 'No products available yet')
+                      : ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.spaceMd),
+                          itemCount: trending.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(width: AppSizes.spaceSm),
+                          itemBuilder: (_, index) => SizedBox(
+                            width: 160,
+                            child: MachineGridCard(machine: trending[index]),
+                          ),
+                        ),
             ),
           ),
+
           const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceLg)),
+
+          // ── Recently Added ─────────────────────────────────────────────
           SliverToBoxAdapter(
             child: SectionHeader(
               title: 'Recently Added',
@@ -129,20 +170,26 @@ class HomeScreen extends ConsumerWidget {
           SliverToBoxAdapter(
             child: SizedBox(
               height: 160,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding:
-                const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
-                itemCount: recentlyAdded.length,
-                separatorBuilder: (_, __) =>
-                const SizedBox(width: AppSizes.spaceSm),
-                itemBuilder: (_, index) => SizedBox(
-                  width: 180,
-                  child: RecentlyAddedCard(machine: recentlyAdded[index]),
-                ),
-              ),
+              child: isLoading
+                  ? _HorizontalShimmer(itemWidth: 180, height: 160)
+                  : recentlyAdded.isEmpty
+                      ? _EmptySection(message: 'No recent additions')
+                      : ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.spaceMd),
+                          itemCount: recentlyAdded.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(width: AppSizes.spaceSm),
+                          itemBuilder: (_, index) => SizedBox(
+                            width: 180,
+                            child:
+                                RecentlyAddedCard(machine: recentlyAdded[index]),
+                          ),
+                        ),
             ),
           ),
+
           SliverToBoxAdapter(
             child: SizedBox(
               height: AppSizes.spaceLg +
@@ -151,6 +198,57 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ─── Shimmer skeleton for horizontal lists ────────────────────────────────────
+
+class _HorizontalShimmer extends StatelessWidget {
+  const _HorizontalShimmer(
+      {required this.itemWidth, required this.height});
+  final double itemWidth;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: AppColors.shimmerBase,
+      highlightColor: AppColors.shimmerHighlight,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding:
+            const EdgeInsets.symmetric(horizontal: AppSizes.spaceMd),
+        itemCount: 4,
+        separatorBuilder: (_, __) =>
+            const SizedBox(width: AppSizes.spaceSm),
+        itemBuilder: (_, __) => Container(
+          width: itemWidth,
+          height: height,
+          decoration: BoxDecoration(
+            color: AppColors.shimmerBase,
+            borderRadius: BorderRadius.circular(AppSizes.radiusMd),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Empty section fallback ───────────────────────────────────────────────────
+
+class _EmptySection extends StatelessWidget {
+  const _EmptySection({required this.message});
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        message,
+        style: AppTextStyles.bodySmall.copyWith(
+            color: AppColors.textSecondary.withValues(alpha: 0.6)),
       ),
     );
   }

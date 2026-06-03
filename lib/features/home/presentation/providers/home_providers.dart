@@ -13,7 +13,7 @@ final selectedCategoryProvider =
 
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
-// ─── Favorites ────────────────────────────────────────────────────────────────
+// ─── Favorites (guest, persisted to SharedPreferences) ───────────────────────
 
 const _kFavoritesKey = 'guest_favorites';
 
@@ -51,16 +51,17 @@ final favoritesProvider = StateNotifierProvider<FavoritesNotifier, Set<String>>(
 
 // ─── All Machines (source of truth — real API) ────────────────────────────────
 
-/// Wraps the async API result so downstream providers can stay synchronous.
-/// On error / loading returns [].
+/// Returns the full product list as [MachineModel]s.
+/// Returns an empty list while loading or on error — downstream widgets use
+/// [machinesLoadingProvider] / [machinesErrorProvider] for skeleton/error UI.
 final allMachinesProvider = Provider<List<MachineModel>>((ref) {
   return ref
-      .watch(allMachinesFromApiProvider)
-      .whenOrNull(data: (list) => list) ??
+          .watch(allMachinesFromApiProvider)
+          .whenOrNull(data: (list) => list) ??
       [];
 });
 
-// ─── API loading / error state (for UI skeletons) ────────────────────────────
+// ─── Loading / error state (for skeleton UI) ─────────────────────────────────
 
 final machinesLoadingProvider = Provider<bool>((ref) {
   return ref.watch(allProductsProvider).isLoading;
@@ -100,7 +101,7 @@ final filteredMachinesProvider = Provider<List<MachineModel>>((ref) {
 
 // ─── Featured Machines ────────────────────────────────────────────────────────
 
-/// Shows the first 4 in-stock products as featured.
+/// First 4 in-stock products become the featured banner.
 final featuredMachinesProvider = Provider<List<MachineModel>>((ref) {
   return ref
       .watch(allMachinesProvider)

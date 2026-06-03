@@ -39,11 +39,12 @@ final List<OnboardingPageModel> onboardingPages = [
     pageType: OnboardingPageType.image,
     imageUrl:
         'https://images.unsplash.com/photo-1581093804475-577d72e35330?w=800&q=80',
-    heading: 'Komatsu Spare\nParts, Fast',
-    body: 'Find quality used heavy equipment\nparts with transparent history.',
+    heading: 'Quality Used Heavy\nMachinery Parts',
+    body:
+        'Specializing in Komatsu excavators\nand wheel loaders across the Philippines.',
     showTrustBadge: true,
     trustBadgeTitle: 'Trusted Supplier',
-    trustBadgeSubtitle: 'Quality parts for\nKomatsu machinery.',
+    trustBadgeSubtitle: 'Inspected & delivered\nwith transparent history.',
   ),
   const OnboardingPageModel(
     pageType: OnboardingPageType.searchPreview,

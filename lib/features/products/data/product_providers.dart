@@ -7,17 +7,15 @@ import 'product_repository.dart';
 
 // ─── Raw API providers ────────────────────────────────────────────────────────
 
-/// Fetches ALL active products once. Re-fetch by invalidating this provider.
-final allProductsProvider =
-    FutureProvider<List<ProductDto>>((ref) async {
+/// Fetches ALL active products. Invalidate to re-fetch.
+final allProductsProvider = FutureProvider<List<ProductDto>>((ref) async {
   final repo = ref.watch(productRepositoryProvider);
   final result = await repo.getProducts(const ProductQuery());
   return result.products;
 });
 
 /// Fetches all categories.
-final categoriesProvider =
-    FutureProvider<List<CategoryDto>>((ref) async {
+final categoriesProvider = FutureProvider<List<CategoryDto>>((ref) async {
   final repo = ref.watch(productRepositoryProvider);
   return repo.getCategories();
 });
@@ -31,7 +29,7 @@ final productDetailProvider =
 
 // ─── Derived: MachineModel list (Home screen) ─────────────────────────────────
 
-/// Converts all products → MachineModel list. Falls back to [] on error.
+/// Converts all products → MachineModel list.
 final allMachinesFromApiProvider = Provider<AsyncValue<List<MachineModel>>>(
   (ref) => ref.watch(allProductsProvider).whenData(
         (products) => products.map((p) => p.toMachineModel()).toList(),

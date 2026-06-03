@@ -1,10 +1,11 @@
 name: abroz_parts_plus
 description: >-
-  Abroz Parts+ is a smart spare parts platform for heavy equipment owners, operators,
-  and contractors across the Philippines. Specialized in Komatsu machinery support —
-  quickly inquire about parts, check availability, get technical assistance, and
-  coordinate service support. Reduce downtime and simplify spare parts management
-  anytime, anywhere.
+  Abroz Parts+ is a smart spare parts platform designed for heavy equipment owners,
+  operators, and contractors across the Philippines. Specialized in Komatsu machinery
+  support, the app helps users quickly inquire about parts, receive technical assistance,
+  check availability, and coordinate service support efficiently. Built to reduce downtime
+  and simplify spare parts management, Abroz Parts+ connects customers with reliable
+  solutions anytime, anywhere.
 publish_to: "none"
 version: 1.0.0+1
 
@@ -34,32 +35,25 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
-  flutter_launcher_icons: ^0.14.1 # ← NEW
+  flutter_launcher_icons: ^0.14.1
 
 # ─── App Icon Configuration ────────────────────────────────────────────────────
 flutter_launcher_icons:
-  # Source image — must be square, ≥1024×1024, PNG with transparency
   image_path: "assets/icons/app_icon.png"
 
-  # ── Android ────────────────────────────────────────────────────────────────
   android: true
-  # Adaptive icon: a foreground layer (logo) over a coloured background layer.
-  # This gives the modern rounded/squircle look on Android 8+.
   adaptive_icon_foreground: "assets/icons/app_icon_adaptive_fg.png"
   adaptive_icon_background: "#FFFFFF"
 
-  # ── iOS ────────────────────────────────────────────────────────────────────
   ios: true
-  remove_alpha_ios: true # App Store requires no transparency on iOS icons
+  remove_alpha_ios: true
 
-  # ── Web (PWA) ──────────────────────────────────────────────────────────────
   web:
     generate: true
     image_path: "assets/icons/app_icon.png"
     background_color: "#FFFFFF"
-    theme_color: "#E8B84B" # Gold accent
+    theme_color: "#E8B84B"
 
-  # ── Windows desktop ───────────────────────────────────────────────────────
   windows:
     generate: true
     image_path: "assets/icons/app_icon.png"
