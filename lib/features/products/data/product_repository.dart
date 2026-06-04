@@ -43,15 +43,13 @@ class ProductRepository {
 
   /// Fetch products from the backend.
   ///
-  /// Backend response shape (from QueryBuilder + sendResponse):
+  /// Production response shape:
   /// ```json
   /// {
   ///   "success": true,
   ///   "message": "...",
-  ///   "data": {
-  ///     "data": [ { ...product }, ... ],
-  ///     "meta": { "page": 1, "limit": 100, "total": 42, "totalPages": 1 }
-  ///   }
+  ///   "data": [ { ...product }, ... ],
+  ///   "meta": { "page": 1, "limit": 100, "total": 42, "totalPages": 1 }
   /// }
   /// ```
   Future<({List<ProductDto> products, ApiMeta? meta})> getProducts(
@@ -62,29 +60,9 @@ class ProductRepository {
       queryParameters: query.toQueryParams(),
     );
 
-    final body = res.data!;
-
-    // The QueryBuilder wraps its result in a nested { data: [...], meta: {...} }
-    // inside the outer sendResponse data field.
-    final outerData = body['data'];
-    List<dynamic> rawList = [];
-    ApiMeta? meta;
-
-    if (outerData is Map<String, dynamic>) {
-      final innerData = outerData['data'];
-      if (innerData is List) {
-        rawList = innerData;
-      } else if (innerData is Map<String, dynamic>) {
-        // edge case: single object wrapped in data
-        rawList = [innerData];
-      }
-      final rawMeta = outerData['meta'];
-      if (rawMeta is Map<String, dynamic>) {
-        meta = ApiMeta.fromJson(rawMeta);
-      }
-    } else if (outerData is List) {
-      rawList = outerData;
-    }
+    final body = res.data ?? const <String, dynamic>{};
+    final rawList = _extractList(body);
+    final meta = _extractMeta(body);
 
     final products = rawList
         .whereType<Map<String, dynamic>>()
@@ -106,18 +84,12 @@ class ProductRepository {
   // ── GET /category ─────────────────────────────────────────────────────────
 
   Future<List<CategoryDto>> getCategories() async {
-    final res = await _dio.get<Map<String, dynamic>>('/category');
-    final body = res.data!;
-
-    final outerData = body['data'];
-    List<dynamic> rawList = [];
-
-    if (outerData is Map<String, dynamic>) {
-      final inner = outerData['data'];
-      if (inner is List) rawList = inner;
-    } else if (outerData is List) {
-      rawList = outerData;
-    }
+    final res = await _dio.get<Map<String, dynamic>>(
+      '/category',
+      queryParameters: const {'page': 1, 'limit': 100},
+    );
+    final body = res.data ?? const <String, dynamic>{};
+    final rawList = _extractList(body);
 
     return rawList
         .whereType<Map<String, dynamic>>()
@@ -126,6 +98,44 @@ class ProductRepository {
   }
 
   // ── Private ────────────────────────────────────────────────────────────────
+
+  List<dynamic> _extractList(Map<String, dynamic> body) {
+    final outerData = body['data'];
+
+    if (outerData is List) {
+      return outerData;
+    }
+
+    if (outerData is Map<String, dynamic>) {
+      final innerData = outerData['data'];
+      if (innerData is List) {
+        return innerData;
+      }
+      if (innerData is Map<String, dynamic>) {
+        return [innerData];
+      }
+      return [outerData];
+    }
+
+    return const [];
+  }
+
+  ApiMeta? _extractMeta(Map<String, dynamic> body) {
+    final topLevelMeta = body['meta'];
+    if (topLevelMeta is Map<String, dynamic>) {
+      return ApiMeta.fromJson(topLevelMeta);
+    }
+
+    final outerData = body['data'];
+    if (outerData is Map<String, dynamic>) {
+      final nestedMeta = outerData['meta'];
+      if (nestedMeta is Map<String, dynamic>) {
+        return ApiMeta.fromJson(nestedMeta);
+      }
+    }
+
+    return null;
+  }
 
   dynamic _unwrap(dynamic data) {
     if (data is Map<String, dynamic> && data.containsKey('data')) {

@@ -1,31 +1,42 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:abroz_parts_plus/features/home/domain/machine_model.dart';
+import 'package:abroz_parts_plus/features/products/data/product_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ab_abroz_inventory/main.dart';
-import 'package:shimmer/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('ProductDto maps production product payloads into app models', () {
+    final dto = ProductDto.fromJson({
+      '_id': 'product-1',
+      'name': 'Komatsu Main Pump',
+      'origin': 'Japan',
+      'partNumber': '708-2L-00650',
+      'brandName': 'Komatsu',
+      'quantity': 3,
+      'categoryId': {
+        '_id': 'category-1',
+        'name': 'Hydraulic Pump Spares',
+      },
+      'condition': 'refurbished',
+      'compatibility': 'PC200-8',
+      'description': 'Ready for installation.',
+      'features': ['Bench tested', 'Cleaned'],
+      'shippingInfo': 'Pickup or freight available.',
+      'conditionNotes': 'Minor cosmetic wear.',
+      'images': ['https://example.com/pump.jpg'],
+      'status': 'active',
+      'createdAt': '2026-06-01T00:00:00.000Z',
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    final machine = dto.toMachineModel();
+    final inventory = dto.toInventoryModel();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(dto.id, 'product-1');
+    expect(dto.categoryName, 'Hydraulic Pump Spares');
+    expect(dto.features, ['Bench tested', 'Cleaned']);
+    expect(machine.id, 'product-1');
+    expect(machine.category, MachineCategory.hydraulicPump);
+    expect(machine.imageUrl, 'https://example.com/pump.jpg');
+    expect(inventory.partNumber, '708-2L-00650');
+    expect(inventory.condition, 'Refurbished');
+    expect(inventory.totalImages, 1);
   });
 }

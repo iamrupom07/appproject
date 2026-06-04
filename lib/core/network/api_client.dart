@@ -5,19 +5,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // ─── Dio Client Provider ──────────────────────────────────────────────────────
 //
 // No auth headers needed — the app is a public read-only catalogue.
-// Timeouts are set to 45 seconds to handle Vercel cold starts.
+// Timeouts are set to 15 seconds so catalogue loading fails fast.
+
+const productionApiBaseUrl = 'https://abroz-machinery-server.vercel.app/api/v1';
 
 final dioProvider = Provider<Dio>((ref) {
-  final baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://10.0.2.2:5000/api/v1';
+  final configuredBaseUrl = dotenv.env['API_BASE_URL']?.trim();
+  final baseUrl = configuredBaseUrl == null || configuredBaseUrl.isEmpty
+      ? productionApiBaseUrl
+      : configuredBaseUrl;
 
   final dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      // Vercel serverless functions can take 20–30 s to cold-start.
-      // 45 s gives enough headroom without feeling broken to the user.
-      connectTimeout: const Duration(seconds: 45),
-      receiveTimeout: const Duration(seconds: 45),
-      sendTimeout: const Duration(seconds: 45),
+      // Home and inventory screens already show loading/error states.
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      sendTimeout: const Duration(seconds: 15),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

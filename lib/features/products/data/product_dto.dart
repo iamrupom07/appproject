@@ -46,38 +46,30 @@ class ProductDto {
     String? catName;
     final cat = json['categoryId'];
     if (cat is Map<String, dynamic>) {
-      catId = cat['_id'] as String?;
-      catName = cat['name'] as String?;
+      catId = _stringOrNull(cat['_id']) ?? _stringOrNull(cat['id']);
+      catName = _stringOrNull(cat['name']);
     } else if (cat is String) {
       catId = cat;
     }
 
     return ProductDto(
-      id: (json['_id'] ?? json['id']) as String,
-      name: json['name'] as String,
-      origin: json['origin'] as String?,
-      partNumber: json['partNumber'] as String?,
-      brandName: json['brandName'] as String?,
+      id: _stringOrNull(json['_id']) ?? _stringOrNull(json['id']) ?? '',
+      name: _stringOrNull(json['name']) ?? '',
+      origin: _stringOrNull(json['origin']),
+      partNumber: _stringOrNull(json['partNumber']),
+      brandName: _stringOrNull(json['brandName']),
       quantity: (json['quantity'] as num?)?.toInt() ?? 0,
       categoryId: catId,
       categoryName: catName,
-      condition: json['condition'] as String? ?? 'used',
-      compatibility: json['compatibility'] as String?,
-      description: json['description'] as String? ?? '',
-      features: (json['features'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
-      shippingInfo: json['shippingInfo'] as String?,
-      conditionNotes: json['conditionNotes'] as String?,
-      images: (json['images'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
-      status: json['status'] as String?,
-      createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'] as String)
-          : null,
+      condition: _stringOrNull(json['condition']) ?? 'used',
+      compatibility: _stringOrNull(json['compatibility']),
+      description: _stringOrNull(json['description']) ?? '',
+      features: _stringList(json['features']),
+      shippingInfo: _stringOrNull(json['shippingInfo']),
+      conditionNotes: _stringOrNull(json['conditionNotes']),
+      images: _stringList(json['images']),
+      status: _stringOrNull(json['status']),
+      createdAt: _dateTimeOrNull(json['createdAt']),
     );
   }
 
@@ -158,14 +150,30 @@ class CategoryDto {
 
   factory CategoryDto.fromJson(Map<String, dynamic> json) {
     return CategoryDto(
-      id: (json['_id'] ?? json['id']) as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
+      id: _stringOrNull(json['_id']) ?? _stringOrNull(json['id']) ?? '',
+      name: _stringOrNull(json['name']) ?? '',
+      description: _stringOrNull(json['description']),
     );
   }
 }
 
 // ─── Fallback ─────────────────────────────────────────────────────────────────
+
+String? _stringOrNull(dynamic value) {
+  if (value is String) return value;
+  return null;
+}
+
+List<String> _stringList(dynamic value) {
+  if (value is! List) return const [];
+  return value.whereType<String>().toList();
+}
+
+DateTime? _dateTimeOrNull(dynamic value) {
+  if (value is String) return DateTime.tryParse(value);
+  if (value is DateTime) return value;
+  return null;
+}
 
 const _kPlaceholderImage =
     'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80';

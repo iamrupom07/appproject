@@ -124,8 +124,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       await Dio().get(
         rootUrl,
         options: Options(
-          sendTimeout: const Duration(seconds: 40),
-          receiveTimeout: const Duration(seconds: 40),
+          sendTimeout: const Duration(seconds: 15),
+          receiveTimeout: const Duration(seconds: 15),
         ),
       );
       // ignore: avoid_print
@@ -285,11 +285,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       const EdgeInsets.symmetric(horizontal: AppSizes.spaceXl),
                   child: Column(
                     children: [
-                      // Duration extended to 35 s to cover Vercel cold starts.
+                      // Keep splash loading capped at 15 s.
                       // Navigation fires as soon as BOTH the bar finishes AND
                       // the warm-up ping returns — whichever is later.
                       LoadingBar(
-                        duration: const Duration(milliseconds: 35000),
+                        duration: const Duration(milliseconds: 15000),
                         color: AppColors.gold,
                         height: 3,
                         onComplete: _onLoadingBarComplete,

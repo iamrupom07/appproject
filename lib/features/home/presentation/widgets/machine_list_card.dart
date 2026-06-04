@@ -12,8 +12,7 @@ import '../../domain/machine_model.dart';
 import '../providers/home_providers.dart';
 
 /// Production-level machine card for the home list.
-/// Handles image loading (shimmer → cached network), favorite toggle,
-/// and taps navigating to the detail screen.
+/// Handles image loading, favorite toggle, and detail navigation.
 class MachineListCard extends ConsumerWidget {
   const MachineListCard({super.key, required this.machine});
 
@@ -35,11 +34,8 @@ class MachineListCard extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSizes.spaceMd),
           child: Row(
             children: [
-              // ── Machine Image ─────────────────────────────────────────────
               _MachineImage(imageUrl: machine.imageUrl),
               const SizedBox(width: AppSizes.spaceMd),
-
-              // ── Info ──────────────────────────────────────────────────────
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,8 +66,6 @@ class MachineListCard extends ConsumerWidget {
                   ],
                 ),
               ),
-
-              // ── Actions ───────────────────────────────────────────────────
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -94,9 +88,7 @@ class MachineListCard extends ConsumerWidget {
       ),
     );
   }
-
-
-// ─── Machine Image ─────────────────────────────────────────────────────────────
+}
 
 class _MachineImage extends StatelessWidget {
   const _MachineImage({required this.imageUrl});
@@ -135,8 +127,6 @@ class _MachineImage extends StatelessWidget {
     );
   }
 }
-
-// ─── Favorite Button ──────────────────────────────────────────────────────────
 
 class _FavoriteButton extends StatelessWidget {
   const _FavoriteButton({
