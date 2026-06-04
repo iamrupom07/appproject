@@ -29,6 +29,8 @@ class InventoryMachineModel {
   String get name => machine.name;
   String get subtitle => machine.subtitle;
   MachineCategory get category => machine.category;
+  String? get categoryId => machine.categoryId;
+  String? get categoryName => machine.categoryName;
   StockStatus get status => machine.status;
   String get imageUrl => machine.imageUrl;
   int? get discountPercent => machine.discountPercent;

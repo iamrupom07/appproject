@@ -18,6 +18,8 @@ import 'widgets/inventory_machine_card.dart';
 import 'widgets/inventory_result_header.dart';
 import 'widgets/inventory_search_bar.dart';
 
+const double _inventoryGridCardHeight = 292;
+
 /// Full Inventory screen.
 /// Composes all sub-widgets; all state lives in providers.
 class InventoryScreen extends ConsumerWidget {
@@ -123,15 +125,14 @@ class InventoryScreen extends ConsumerWidget {
                           horizontal: AppSizes.spaceMd),
                       child: Container(
                         padding: const EdgeInsets.all(AppSizes.spaceMd),
-                        margin:
-                            const EdgeInsets.only(bottom: AppSizes.spaceMd),
+                        margin: const EdgeInsets.only(bottom: AppSizes.spaceMd),
                         decoration: BoxDecoration(
                           color: AppColors.outOfStock.withValues(alpha: 0.1),
                           borderRadius:
                               BorderRadius.circular(AppSizes.radiusSm),
                           border: Border.all(
-                              color: AppColors.outOfStock
-                                  .withValues(alpha: 0.3)),
+                              color:
+                                  AppColors.outOfStock.withValues(alpha: 0.3)),
                         ),
                         child: Row(
                           children: [
@@ -160,7 +161,7 @@ class InventoryScreen extends ConsumerWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: AppSizes.spaceMd,
                         mainAxisSpacing: AppSizes.spaceMd,
-                        childAspectRatio: 0.62,
+                        mainAxisExtent: _inventoryGridCardHeight,
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, _) => Shimmer.fromColors(
@@ -197,7 +198,7 @@ class InventoryScreen extends ConsumerWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: AppSizes.spaceMd,
                         mainAxisSpacing: AppSizes.spaceMd,
-                        childAspectRatio: 0.62,
+                        mainAxisExtent: _inventoryGridCardHeight,
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) => InventoryMachineCard(

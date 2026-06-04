@@ -1,4 +1,3 @@
-import 'package:abroz_parts_plus/features/home/presentation/providers/home_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +10,7 @@ import '../../../../../core/constants/app_text_styles.dart';
 import '../../../../../core/utils/messenger_launcher.dart';
 import '../../../../../core/widgets/contact_button.dart';
 import '../../../../../core/widgets/stock_badge.dart';
-import '../../../../features/home/presentation/providers/home_providers.dart';
+import '../../../home/presentation/providers/home_providers.dart';
 import '../../domain/inventory_machine_model.dart';
 
 /// Grid card for the Inventory screen.
@@ -95,9 +94,11 @@ class InventoryMachineCard extends ConsumerWidget {
                             fontStyle: FontStyle.italic,
                             color: AppColors.textSecondary,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      ContactButton(
+                      const ContactButton(
                         onTap: openMessenger,
                         height: 30,
                       ),

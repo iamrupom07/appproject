@@ -34,14 +34,6 @@ class InventoryFilterBar extends ConsumerWidget {
         children: [
           Expanded(
             child: _FilterChip(
-              label: filters.brand.label,
-              isActive: filters.brand != BrandFilter.all,
-              onTap: () => _showBrandSheet(context, ref, notifier),
-            ),
-          ),
-          _Divider(),
-          Expanded(
-            child: _FilterChip(
               label: filters.condition.label,
               isActive: filters.condition != ConditionFilter.all,
               onTap: () => _showConditionSheet(context, ref, notifier),
@@ -71,21 +63,6 @@ class InventoryFilterBar extends ConsumerWidget {
   }
 
   // ── Bottom Sheet Helpers ────────────────────────────────────────────────────
-
-  void _showBrandSheet(
-    BuildContext context,
-    WidgetRef ref,
-    InventoryFiltersNotifier notifier,
-  ) {
-    _showPickerSheet<BrandFilter>(
-      context: context,
-      title: 'Brand',
-      options: BrandFilter.values,
-      selected: ref.read(inventoryFiltersProvider).brand,
-      labelOf: (v) => v.label,
-      onSelect: notifier.setBrand,
-    );
-  }
 
   void _showConditionSheet(
     BuildContext context,

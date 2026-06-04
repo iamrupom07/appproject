@@ -117,6 +117,8 @@ class ProductDto {
       category: machineCategory,
       status: stockStatus,
       imageUrl: primaryImage,
+      categoryId: categoryId,
+      categoryName: categoryName,
       isFeatured: false,
       isNew: isNew,
       isRecentlyAdded: isNew,

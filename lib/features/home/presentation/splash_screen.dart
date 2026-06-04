@@ -33,8 +33,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   // Tracks whether the API warm-up ping has completed
   bool _apiReady = false;
-  // Tracks whether the minimum splash animation has finished
-  bool _animationComplete = false;
+  // Tracks whether the minimum splash animation has finished (2 s minimum)
+  bool _minDelayPassed = false;
+  // Prevent double-navigation
+  bool _navigated = false;
 
   @override
   void initState() {
@@ -105,13 +107,22 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (mounted) _taglineController.forward();
     });
 
-    // Kick off the warm-up ping immediately so Vercel wakes up during splash
-    _warmUpBackend();
+    // Minimum 2 s on splash so the logo animation is always visible
+    Future.delayed(const Duration(seconds: 2), () {
+      if (!mounted) return;
+      setState(() => _minDelayPassed = true);
+      _maybeNavigate();
+    });
+
+    // Prefetch products + categories in parallel during splash so the
+    // home screen data is already in the Riverpod cache when we arrive.
+    _warmUpAndPrefetch();
   }
 
-  /// Sends a lightweight GET / to the backend root to wake the Vercel
-  /// serverless function before the real product requests fire.
-  Future<void> _warmUpBackend() async {
+  /// 1. Wakes up the Vercel cold-start with a cheap root ping.
+  /// 2. Immediately after (or in parallel) kicks off the real product +
+  ///    category fetches so the home screen renders instantly on arrival.
+  Future<void> _warmUpAndPrefetch() async {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ?? '';
       if (baseUrl.isEmpty) {
@@ -119,23 +130,56 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         return;
       }
 
-      // Hit the root endpoint — it returns immediately and costs nothing
-      final rootUrl = baseUrl.replaceAll(RegExp(r'/api/v1$'), '');
-      await Dio().get(
-        rootUrl,
-        options: Options(
-          sendTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
+      // Fire the root-ping and the two data fetches simultaneously.
+      // The ping wakes the serverless function; the data calls benefit
+      // from the warm instance that's already spinning up.
+      final dio = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
         ),
       );
+
+      // Build the warmup URL: /api/v1/warmup
+      final warmupUrl = baseUrl.endsWith('/api/v1')
+          ? '$baseUrl/warmup'
+          : '$baseUrl/api/v1/warmup';
+
+      await Future.wait([
+        // Lightweight wake-up ping — hits the dedicated /warmup endpoint
+        // which responds instantly and warms the DB connection.
+        dio.get(warmupUrl).catchError((_) => Response(
+              requestOptions: RequestOptions(path: warmupUrl),
+              statusCode: 0,
+            )),
+        // Prefetch products into Riverpod cache
+        _prefetchProducts(),
+        // Prefetch categories into Riverpod cache
+        _prefetchCategories(),
+      ]);
+
       // ignore: avoid_print
-      print('[Splash] Backend warm-up complete');
+      print('[Splash] Warm-up + prefetch complete');
     } catch (e) {
       // ignore: avoid_print
-      print('[Splash] Warm-up finished (error ignored): $e');
+      print('[Splash] Warm-up error (ignored): $e');
     } finally {
       _markApiReady();
     }
+  }
+
+  Future<void> _prefetchProducts() async {
+    try {
+      // Reading the provider causes Riverpod to fire the FutureProvider and
+      // cache the result — the home screen will find it ready immediately.
+      await ref.read(allProductsProvider.future);
+    } catch (_) {}
+  }
+
+  Future<void> _prefetchCategories() async {
+    try {
+      await ref.read(categoriesProvider.future);
+    } catch (_) {}
   }
 
   void _markApiReady() {
@@ -144,14 +188,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _maybeNavigate();
   }
 
-  void _onLoadingBarComplete() {
-    setState(() => _animationComplete = true);
-    _maybeNavigate();
-  }
-
-  /// Navigate only when BOTH the bar animation AND the warm-up are done.
+  /// Navigate only when BOTH the minimum delay AND the warm-up are done.
   void _maybeNavigate() {
-    if (_apiReady && _animationComplete) {
+    if (_navigated) return;
+    if (_apiReady && _minDelayPassed) {
+      _navigated = true;
       if (!mounted) return;
       context.go('/home');
     }
@@ -285,14 +326,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       const EdgeInsets.symmetric(horizontal: AppSizes.spaceXl),
                   child: Column(
                     children: [
-                      // Keep splash loading capped at 15 s.
-                      // Navigation fires as soon as BOTH the bar finishes AND
-                      // the warm-up ping returns — whichever is later.
+                      // Bar is purely visual — navigation is driven by
+                      // _apiReady + _minDelayPassed, not by bar completion.
+                      // Cap at 8 s so it never looks frozen.
                       LoadingBar(
-                        duration: const Duration(milliseconds: 15000),
+                        duration: const Duration(milliseconds: 8000),
                         color: AppColors.gold,
                         height: 3,
-                        onComplete: _onLoadingBarComplete,
                       ),
                       const SizedBox(height: AppSizes.spaceSm + 2),
                       Text(

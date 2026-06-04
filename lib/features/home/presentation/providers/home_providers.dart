@@ -7,7 +7,7 @@ import '../../domain/machine_model.dart';
 // ─── Selected Category ────────────────────────────────────────────────────────
 
 final selectedCategoryProvider =
-    StateProvider<MachineCategory>((ref) => MachineCategory.all);
+    StateProvider<CategorySelection>((ref) => const CategorySelection.all());
 
 // ─── Search Query ─────────────────────────────────────────────────────────────
 
@@ -82,8 +82,8 @@ final filteredMachinesProvider = Provider<List<MachineModel>>((ref) {
 
   var list = all;
 
-  if (category != MachineCategory.all) {
-    list = list.where((m) => m.category == category).toList();
+  if (!category.isAll) {
+    list = list.where((m) => m.matchesCategorySelection(category)).toList();
   }
 
   if (query.isNotEmpty) {

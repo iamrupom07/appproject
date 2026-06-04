@@ -13,18 +13,6 @@ enum SortOption {
   final String label;
 }
 
-enum BrandFilter {
-  all('All Brands'),
-  komatsu('Komatsu'),
-  cat('CAT'),
-  volvo('Volvo'),
-  hitachi('Hitachi'),
-  doosan('Doosan');
-
-  const BrandFilter(this.label);
-  final String label;
-}
-
 enum ConditionFilter {
   all('All Conditions'),
   newOem('New – OEM'),
@@ -49,31 +37,26 @@ enum AvailabilityFilter {
 
 class InventoryFilters {
   const InventoryFilters({
-    this.brand = BrandFilter.all,
     this.condition = ConditionFilter.all,
     this.availability = AvailabilityFilter.all,
     this.sort = SortOption.relevance,
   });
 
-  final BrandFilter brand;
   final ConditionFilter condition;
   final AvailabilityFilter availability;
   final SortOption sort;
 
   bool get hasActiveFilters =>
-      brand != BrandFilter.all ||
       condition != ConditionFilter.all ||
       availability != AvailabilityFilter.all ||
       sort != SortOption.relevance;
 
   InventoryFilters copyWith({
-    BrandFilter? brand,
     ConditionFilter? condition,
     AvailabilityFilter? availability,
     SortOption? sort,
   }) {
     return InventoryFilters(
-      brand: brand ?? this.brand,
       condition: condition ?? this.condition,
       availability: availability ?? this.availability,
       sort: sort ?? this.sort,
@@ -84,11 +67,10 @@ class InventoryFilters {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is InventoryFilters &&
-          other.brand == brand &&
           other.condition == condition &&
           other.availability == availability &&
           other.sort == sort);
 
   @override
-  int get hashCode => Object.hash(brand, condition, availability, sort);
+  int get hashCode => Object.hash(condition, availability, sort);
 }

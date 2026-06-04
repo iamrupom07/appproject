@@ -39,7 +39,6 @@ class _FilterBottomSheetState extends ConsumerState<_FilterBottomSheet> {
 
   void _apply() {
     final notifier = ref.read(inventoryFiltersProvider.notifier);
-    notifier.setBrand(_draft.brand);
     notifier.setCondition(_draft.condition);
     notifier.setAvailability(_draft.availability);
     notifier.setSort(_draft.sort);
@@ -50,7 +49,6 @@ class _FilterBottomSheetState extends ConsumerState<_FilterBottomSheet> {
 
   int get _activeCount {
     int count = 0;
-    if (_draft.brand != BrandFilter.all) count++;
     if (_draft.condition != ConditionFilter.all) count++;
     if (_draft.availability != AvailabilityFilter.all) count++;
     if (_draft.sort != SortOption.relevance) count++;
@@ -87,7 +85,7 @@ class _FilterBottomSheetState extends ConsumerState<_FilterBottomSheet> {
           // ── Header ───────────────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              AppSizes.spaceMd, AppSizes.spaceSm, AppSizes.spaceSm, 0),
+                AppSizes.spaceMd, AppSizes.spaceSm, AppSizes.spaceSm, 0),
             child: Row(
               children: [
                 Text('Refine Search', style: AppTextStyles.headingMedium),
@@ -123,31 +121,20 @@ class _FilterBottomSheetState extends ConsumerState<_FilterBottomSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sort
-                  _SectionTitle(title: 'Sort By'),
+                  const _SectionTitle(title: 'Sort By'),
                   const SizedBox(height: AppSizes.spaceSm),
                   _ChipGroup<SortOption>(
                     values: SortOption.values,
                     selected: _draft.sort,
                     label: (v) => v.label,
-                    onSelected: (v) => setState(() => _draft = _draft.copyWith(sort: v)),
-                  ),
-
-                  const SizedBox(height: AppSizes.spaceMd),
-
-                  // Brand
-                  _SectionTitle(title: 'Brand'),
-                  const SizedBox(height: AppSizes.spaceSm),
-                  _ChipGroup<BrandFilter>(
-                    values: BrandFilter.values,
-                    selected: _draft.brand,
-                    label: (v) => v.label,
-                    onSelected: (v) => setState(() => _draft = _draft.copyWith(brand: v)),
+                    onSelected: (v) =>
+                        setState(() => _draft = _draft.copyWith(sort: v)),
                   ),
 
                   const SizedBox(height: AppSizes.spaceMd),
 
                   // Condition
-                  _SectionTitle(title: 'Condition'),
+                  const _SectionTitle(title: 'Condition'),
                   const SizedBox(height: AppSizes.spaceSm),
                   _ChipGroup<ConditionFilter>(
                     values: ConditionFilter.values,
@@ -160,14 +147,14 @@ class _FilterBottomSheetState extends ConsumerState<_FilterBottomSheet> {
                   const SizedBox(height: AppSizes.spaceMd),
 
                   // Availability
-                  _SectionTitle(title: 'Availability'),
+                  const _SectionTitle(title: 'Availability'),
                   const SizedBox(height: AppSizes.spaceSm),
                   _ChipGroup<AvailabilityFilter>(
                     values: AvailabilityFilter.values,
                     selected: _draft.availability,
                     label: (v) => v.label,
-                    onSelected: (v) =>
-                        setState(() => _draft = _draft.copyWith(availability: v)),
+                    onSelected: (v) => setState(
+                        () => _draft = _draft.copyWith(availability: v)),
                   ),
 
                   const SizedBox(height: AppSizes.spaceLg),

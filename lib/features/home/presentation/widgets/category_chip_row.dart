@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../inventory/presentation/providers/inventory_providers.dart';
 import '../../domain/machine_model.dart';
 import '../providers/home_providers.dart';
 
@@ -25,13 +27,18 @@ class CategoryChipRow extends ConsumerWidget {
         separatorBuilder: (_, __) => const SizedBox(width: AppSizes.spaceSm),
         itemBuilder: (context, index) {
           final category = MachineCategory.values[index];
-          final isSelected = category == selected;
+          final isSelected =
+              selected.id == null && selected.category == category;
 
           return _CategoryChip(
             label: category.label,
             isSelected: isSelected,
-            onTap: () =>
-                ref.read(selectedCategoryProvider.notifier).state = category,
+            onTap: () {
+              final selection = CategorySelection.fromCategory(category);
+              ref.read(selectedCategoryProvider.notifier).state = selection;
+              ref.read(inventoryCategoryProvider.notifier).state = selection;
+              context.go('/inventory');
+            },
           );
         },
       ),

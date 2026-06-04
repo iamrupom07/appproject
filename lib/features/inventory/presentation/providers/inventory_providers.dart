@@ -19,14 +19,13 @@ final inventorySearchQueryProvider = StateProvider<String>((ref) => '');
 // ─── Selected Category ────────────────────────────────────────────────────────
 
 final inventoryCategoryProvider =
-    StateProvider<MachineCategory>((ref) => MachineCategory.all);
+    StateProvider<CategorySelection>((ref) => const CategorySelection.all());
 
 // ─── Filters ─────────────────────────────────────────────────────────────────
 
 class InventoryFiltersNotifier extends StateNotifier<InventoryFilters> {
   InventoryFiltersNotifier() : super(const InventoryFilters());
 
-  void setBrand(BrandFilter brand) => state = state.copyWith(brand: brand);
   void setCondition(ConditionFilter condition) =>
       state = state.copyWith(condition: condition);
   void setAvailability(AvailabilityFilter availability) =>
@@ -72,8 +71,10 @@ final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
   var list = all;
 
   // ── Category ──────────────────────────────────────────────────────────────
-  if (category != MachineCategory.all) {
-    list = list.where((m) => m.category == category).toList();
+  if (!category.isAll) {
+    list = list
+        .where((m) => m.machine.matchesCategorySelection(category))
+        .toList();
   }
 
   // ── Text search ───────────────────────────────────────────────────────────
@@ -102,19 +103,11 @@ final filteredInventoryProvider = Provider<List<InventoryMachineModel>>((ref) {
   }
 
   // ── Brand filter ──────────────────────────────────────────────────────────
-  if (filters.brand != BrandFilter.all) {
-    list = list
-        .where((m) =>
-            m.name.toLowerCase().contains(filters.brand.label.toLowerCase()))
-        .toList();
-  }
-
   // ── Condition filter ──────────────────────────────────────────────────────
   if (filters.condition != ConditionFilter.all) {
     list = list
         .where((m) =>
-            m.condition.toLowerCase() ==
-            filters.condition.label.toLowerCase())
+            m.condition.toLowerCase() == filters.condition.label.toLowerCase())
         .toList();
   }
 
