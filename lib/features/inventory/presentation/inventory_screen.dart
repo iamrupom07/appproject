@@ -11,7 +11,6 @@ import '../../products/data/product_providers.dart';
 import 'providers/inventory_providers.dart';
 import 'widgets/inventory_bottom_bar.dart';
 import 'widgets/filter_bottom_sheet.dart';
-import 'widgets/inventory_category_bar.dart';
 import 'widgets/inventory_filter_bar.dart';
 import 'widgets/inventory_header_bar.dart';
 import 'widgets/inventory_list_card.dart';
@@ -83,13 +82,6 @@ class InventoryScreen extends ConsumerWidget {
                       child: InventorySearchBar(),
                     ),
                   ),
-
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: AppSizes.spaceMd),
-                  ),
-
-                  // ── Category bar ──────────────────────────────────────────
-                  const SliverToBoxAdapter(child: InventoryCategoryBar()),
 
                   const SliverToBoxAdapter(
                     child: SizedBox(height: AppSizes.spaceMd),

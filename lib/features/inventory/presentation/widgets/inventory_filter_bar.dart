@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/app_sizes.dart';
 import '../../../../../core/constants/app_text_styles.dart';
+import '../../../../../features/home/domain/machine_model.dart';
+import '../../../../../features/products/data/product_dto.dart';
+import '../../../../../features/products/data/product_providers.dart';
 import '../../domain/inventory_filter_model.dart';
 import '../providers/inventory_providers.dart';
 
@@ -16,6 +19,8 @@ class InventoryFilterBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filters = ref.watch(inventoryFiltersProvider);
     final notifier = ref.read(inventoryFiltersProvider.notifier);
+    final category = ref.watch(inventoryCategoryProvider);
+    final categoriesAsync = ref.watch(categoriesProvider);
 
     return Container(
       height: 44,
@@ -32,6 +37,14 @@ class InventoryFilterBar extends ConsumerWidget {
       ),
       child: Row(
         children: [
+          Expanded(
+            child: _FilterChip(
+              label: category.isAll ? 'Category' : category.label,
+              isActive: !category.isAll,
+              onTap: () => _showCategorySheet(context, ref, categoriesAsync),
+            ),
+          ),
+          _Divider(),
           Expanded(
             child: _FilterChip(
               label: filters.condition.label,
@@ -63,6 +76,30 @@ class InventoryFilterBar extends ConsumerWidget {
   }
 
   // ── Bottom Sheet Helpers ────────────────────────────────────────────────────
+
+  void _showCategorySheet(
+    BuildContext context,
+    WidgetRef ref,
+    AsyncValue<List<CategoryDto>> categoriesAsync,
+  ) {
+    final apiCategories = categoriesAsync.valueOrNull ?? const <CategoryDto>[];
+    final options = <CategorySelection>[
+      const CategorySelection.all(),
+      ...apiCategories.map(
+        (c) => CategorySelection.fromApi(id: c.id, label: c.name),
+      ),
+    ];
+
+    _showPickerSheet<CategorySelection>(
+      context: context,
+      title: 'Category',
+      options: options,
+      selected: ref.read(inventoryCategoryProvider),
+      labelOf: (v) => v.label,
+      onSelect: (v) =>
+          ref.read(inventoryCategoryProvider.notifier).state = v,
+    );
+  }
 
   void _showConditionSheet(
     BuildContext context,
@@ -120,6 +157,7 @@ class InventoryFilterBar extends ConsumerWidget {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: AppColors.cardBackground,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(AppSizes.radiusLg),
@@ -267,6 +305,8 @@ class _PickerSheet<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final maxSheetHeight = MediaQuery.of(context).size.height * 0.7;
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
@@ -293,27 +333,36 @@ class _PickerSheet<T> extends StatelessWidget {
             const SizedBox(height: AppSizes.spaceMd),
             Text(title, style: AppTextStyles.headingMedium),
             const SizedBox(height: AppSizes.spaceSm),
-            ...options.map(
-              (opt) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(
-                  labelOf(opt),
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontWeight:
-                        opt == selected ? FontWeight.w600 : FontWeight.w400,
-                    color: opt == selected
-                        ? AppColors.textPrimary
-                        : AppColors.textSecondary,
-                  ),
-                ),
-                trailing: opt == selected
-                    ? const Icon(
-                        Icons.check_rounded,
-                        color: AppColors.gold,
-                        size: 20,
-                      )
-                    : null,
-                onTap: () => onSelect(opt),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxSheetHeight),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: options.length,
+                itemBuilder: (context, index) {
+                  final opt = options[index];
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      labelOf(opt),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: opt == selected
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                        color: opt == selected
+                            ? AppColors.textPrimary
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                    trailing: opt == selected
+                        ? const Icon(
+                            Icons.check_rounded,
+                            color: AppColors.gold,
+                            size: 20,
+                          )
+                        : null,
+                    onTap: () => onSelect(opt),
+                  );
+                },
               ),
             ),
           ],

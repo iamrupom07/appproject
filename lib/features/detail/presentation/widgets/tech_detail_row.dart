@@ -21,6 +21,7 @@ class TechDetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(
           _iconFor(iconAsset),
@@ -29,14 +30,20 @@ class TechDetailRow extends StatelessWidget {
         ),
         const SizedBox(width: AppSizes.spaceSm),
         Expanded(
+          flex: 2,
           child: Text(
             label,
             style: AppTextStyles.bodySmall,
           ),
         ),
-        Text(
-          value,
-          style: AppTextStyles.headingSmall.copyWith(fontSize: 13),
+        const SizedBox(width: AppSizes.spaceSm),
+        Expanded(
+          flex: 3,
+          child: Text(
+            value,
+            style: AppTextStyles.headingSmall.copyWith(fontSize: 13),
+            textAlign: TextAlign.end,
+          ),
         ),
       ],
     );

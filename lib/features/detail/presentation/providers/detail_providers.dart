@@ -65,10 +65,6 @@ MachineDetailModel _dtoToDetailModel(ProductDto dto) {
     if (dto.brandName != null)
       TechDetail(
           label: 'Brand', value: dto.brandName!, iconAsset: 'clock'),
-    TechDetail(
-        label: 'Quantity',
-        value: dto.quantity.toString(),
-        iconAsset: 'power'),
   ];
 
   // Build gallery — use real images, pad with placeholder if empty
