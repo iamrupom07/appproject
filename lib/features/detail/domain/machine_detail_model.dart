@@ -35,7 +35,6 @@ class MachineDetailModel {
     required this.description,
     required this.features,
     required this.shippingInfo,
-    required this.conditionNotes,
     this.has3DView = false,
   });
 
@@ -56,6 +55,5 @@ class MachineDetailModel {
   final String description;
   final String features;
   final String shippingInfo;
-  final String conditionNotes;
   final bool has3DView;
 }

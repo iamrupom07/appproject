@@ -12,6 +12,13 @@ import '../../../inventory/presentation/providers/inventory_providers.dart';
 import '../../domain/machine_model.dart';
 import '../providers/home_providers.dart';
 
+/// Max number of real API categories shown before collapsing the rest
+/// into a single "Others" tab.
+const int _kMaxVisibleCategories = 5;
+
+/// Sentinel id used to identify the synthetic "Others" tab.
+const String _kOthersTabId = '__others__';
+
 /// Horizontal scrollable category icon tabs driven by real API data.
 ///
 /// Falls back to a shimmer skeleton while loading and gracefully handles
@@ -28,7 +35,18 @@ class CategoryTabRow extends ConsumerWidget {
       loading: () => _CategoryShimmer(),
       error: (_, __) => _StaticCategoryTabRow(selected: selected, ref: ref),
       data: (categories) {
-        // Build tabs: "All" first, then one per real API category
+        // Only show the first N real categories; anything beyond that is
+        // tucked behind a single "Others" tab that opens the Inventory
+        // screen, where the full category list is available to filter by.
+        final visibleCategories =
+            categories.take(_kMaxVisibleCategories).toList();
+        final overflowCategories =
+            categories.length > _kMaxVisibleCategories
+                ? categories.skip(_kMaxVisibleCategories).toList()
+                : const <CategoryDto>[];
+
+        // Build tabs: "All" first, then visible API categories, then
+        // "Others" if there's overflow.
         final tabs = <_TabData>[
           const _TabData(
             id: null,
@@ -36,7 +54,13 @@ class CategoryTabRow extends ConsumerWidget {
             icon: Icons.apps_rounded,
             category: MachineCategory.all,
           ),
-          ...categories.map(_tabFromDto),
+          ...visibleCategories.map(_tabFromDto),
+          if (overflowCategories.isNotEmpty)
+            const _TabData(
+              id: _kOthersTabId,
+              label: 'Others',
+              icon: Icons.more_horiz_rounded,
+            ),
         ];
 
         return SizedBox(
@@ -47,7 +71,10 @@ class CategoryTabRow extends ConsumerWidget {
             itemCount: tabs.length,
             itemBuilder: (context, index) {
               final tab = tabs[index];
-              final isSelected = _isSelected(selected, tab);
+              final isOthers = tab.id == _kOthersTabId;
+              final isSelected = isOthers
+                  ? _isOverflowSelected(selected, overflowCategories)
+                  : _isSelected(selected, tab);
               return _CategoryTabItem(
                 item: tab,
                 isSelected: isSelected,
@@ -55,7 +82,9 @@ class CategoryTabRow extends ConsumerWidget {
                   _openInventoryForSelection(
                     context,
                     ref,
-                    _selectionFromTab(tab),
+                    isOthers
+                        ? const CategorySelection.all()
+                        : _selectionFromTab(tab),
                   );
                 },
               );
@@ -95,6 +124,17 @@ bool _isSelected(CategorySelection selected, _TabData tab) {
   }
   return selected.id == null &&
       selected.label.toLowerCase() == tab.label.toLowerCase();
+}
+
+/// Whether the current selection matches one of the categories collapsed
+/// into the "Others" tab — used to highlight "Others" when the user has
+/// filtered by a category that isn't shown directly on the home screen.
+bool _isOverflowSelected(
+  CategorySelection selected,
+  List<CategoryDto> overflowCategories,
+) {
+  if (selected.id == null) return false;
+  return overflowCategories.any((c) => c.id == selected.id);
 }
 
 CategorySelection _selectionFromTab(_TabData tab) {

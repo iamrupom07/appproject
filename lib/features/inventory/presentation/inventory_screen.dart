@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/utils/messenger_launcher.dart';
+import '../../products/data/product_providers.dart';
 import 'providers/inventory_providers.dart';
 import 'widgets/inventory_bottom_bar.dart';
 import 'widgets/filter_bottom_sheet.dart';
@@ -39,198 +40,205 @@ class InventoryScreen extends ConsumerWidget {
         body: Stack(
           children: [
             // ── Scrollable content ─────────────────────────────────────────
-            CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                // ── Status bar safe area ──────────────────────────────────
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).padding.top,
-                  ),
+            RefreshIndicator(
+              color: AppColors.gold,
+              onRefresh: () => _refreshInventoryData(ref),
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
                 ),
-
-                // ── Header ────────────────────────────────────────────────
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSizes.spaceMd,
-                      AppSizes.spaceMd,
-                      AppSizes.spaceMd,
-                      0,
-                    ),
-                    child: InventoryHeaderBar(
-                      machineCount: machines.length,
+                slivers: [
+                  // ── Status bar safe area ──────────────────────────────────
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).padding.top,
                     ),
                   ),
-                ),
 
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: AppSizes.spaceMd),
-                ),
-
-                // ── Search bar ────────────────────────────────────────────
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceMd,
+                  // ── Header ────────────────────────────────────────────────
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSizes.spaceMd,
+                        AppSizes.spaceMd,
+                        AppSizes.spaceMd,
+                        0,
+                      ),
+                      child: InventoryHeaderBar(
+                        machineCount: machines.length,
+                      ),
                     ),
-                    child: InventorySearchBar(),
                   ),
-                ),
 
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: AppSizes.spaceMd),
-                ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: AppSizes.spaceMd),
+                  ),
 
-                // ── Category bar ──────────────────────────────────────────
-                const SliverToBoxAdapter(child: InventoryCategoryBar()),
-
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: AppSizes.spaceMd),
-                ),
-
-                // ── Filter bar ────────────────────────────────────────────
-                const SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceMd,
+                  // ── Search bar ────────────────────────────────────────────
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceMd,
+                      ),
+                      child: InventorySearchBar(),
                     ),
-                    child: InventoryFilterBar(),
                   ),
-                ),
 
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: AppSizes.spaceMd),
-                ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: AppSizes.spaceMd),
+                  ),
 
-                // ── Result header ─────────────────────────────────────────
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSizes.spaceMd,
+                  // ── Category bar ──────────────────────────────────────────
+                  const SliverToBoxAdapter(child: InventoryCategoryBar()),
+
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: AppSizes.spaceMd),
+                  ),
+
+                  // ── Filter bar ────────────────────────────────────────────
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.spaceMd,
+                      ),
+                      child: InventoryFilterBar(),
                     ),
-                    child: InventoryResultHeader(count: machines.length),
                   ),
-                ),
 
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: AppSizes.spaceMd),
-                ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: AppSizes.spaceMd),
+                  ),
 
-                // ── Error banner ──────────────────────────────────────────
-                if (apiError != null)
+                  // ── Result header ─────────────────────────────────────────
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: AppSizes.spaceMd),
-                      child: Container(
-                        padding: const EdgeInsets.all(AppSizes.spaceMd),
-                        margin: const EdgeInsets.only(bottom: AppSizes.spaceMd),
-                        decoration: BoxDecoration(
-                          color: AppColors.outOfStock.withValues(alpha: 0.1),
-                          borderRadius:
-                              BorderRadius.circular(AppSizes.radiusSm),
-                          border: Border.all(
-                              color:
-                                  AppColors.outOfStock.withValues(alpha: 0.3)),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.wifi_off_rounded,
-                                color: AppColors.outOfStock, size: 18),
-                            const SizedBox(width: AppSizes.spaceSm),
-                            const Expanded(
-                              child: Text(
-                                'Could not load inventory. Check your connection.',
-                              ),
-                            ),
-                          ],
-                        ),
+                        horizontal: AppSizes.spaceMd,
                       ),
+                      child: InventoryResultHeader(count: machines.length),
                     ),
                   ),
 
-                // ── Machine grid or list ───────────────────────────────────
-                if (isLoading)
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(
-                        AppSizes.spaceMd, 0, AppSizes.spaceMd, 96),
-                    sliver: SliverGrid(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: AppSizes.spaceMd,
-                        mainAxisSpacing: AppSizes.spaceMd,
-                        mainAxisExtent: _inventoryGridCardHeight,
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: AppSizes.spaceMd),
+                  ),
+
+                  // ── Error banner ──────────────────────────────────────────
+                  if (apiError != null)
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppSizes.spaceMd),
+                        child: Container(
+                          padding: const EdgeInsets.all(AppSizes.spaceMd),
+                          margin:
+                              const EdgeInsets.only(bottom: AppSizes.spaceMd),
+                          decoration: BoxDecoration(
+                            color: AppColors.outOfStock.withValues(alpha: 0.1),
+                            borderRadius:
+                                BorderRadius.circular(AppSizes.radiusSm),
+                            border: Border.all(
+                                color: AppColors.outOfStock
+                                    .withValues(alpha: 0.3)),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.wifi_off_rounded,
+                                  color: AppColors.outOfStock, size: 18),
+                              SizedBox(width: AppSizes.spaceSm),
+                              Expanded(
+                                child: Text(
+                                  'Could not load inventory. Check your connection.',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, _) => Shimmer.fromColors(
-                          baseColor: AppColors.shimmerBase,
-                          highlightColor: AppColors.shimmerHighlight,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.shimmerBase,
-                              borderRadius:
-                                  BorderRadius.circular(AppSizes.radiusMd),
+                    ),
+
+                  // ── Machine grid or list ───────────────────────────────────
+                  if (isLoading)
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(
+                          AppSizes.spaceMd, 0, AppSizes.spaceMd, 96),
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: AppSizes.spaceMd,
+                          mainAxisSpacing: AppSizes.spaceMd,
+                          mainAxisExtent: _inventoryGridCardHeight,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, _) => Shimmer.fromColors(
+                            baseColor: AppColors.shimmerBase,
+                            highlightColor: AppColors.shimmerHighlight,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.shimmerBase,
+                                borderRadius:
+                                    BorderRadius.circular(AppSizes.radiusMd),
+                              ),
                             ),
                           ),
+                          childCount: 6,
                         ),
-                        childCount: 6,
                       ),
-                    ),
-                  )
-                else if (machines.isEmpty)
-                  const SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: _EmptyState(),
-                  )
-                else if (viewMode == InventoryViewMode.grid)
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSizes.spaceMd,
-                      0,
-                      AppSizes.spaceMd,
-                      96,
-                    ),
-                    sliver: SliverGrid(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: AppSizes.spaceMd,
-                        mainAxisSpacing: AppSizes.spaceMd,
-                        mainAxisExtent: _inventoryGridCardHeight,
+                    )
+                  else if (machines.isEmpty)
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: _EmptyState(),
+                    )
+                  else if (viewMode == InventoryViewMode.grid)
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSizes.spaceMd,
+                        0,
+                        AppSizes.spaceMd,
+                        96,
                       ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => InventoryMachineCard(
-                          machine: machines[index],
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: AppSizes.spaceMd,
+                          mainAxisSpacing: AppSizes.spaceMd,
+                          mainAxisExtent: _inventoryGridCardHeight,
                         ),
-                        childCount: machines.length,
-                      ),
-                    ),
-                  )
-                else
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSizes.spaceMd,
-                      0,
-                      AppSizes.spaceMd,
-                      96,
-                    ),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) => Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: AppSizes.spaceMd,
-                          ),
-                          child: InventoryListCard(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) => InventoryMachineCard(
                             machine: machines[index],
                           ),
+                          childCount: machines.length,
                         ),
-                        childCount: machines.length,
+                      ),
+                    )
+                  else
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSizes.spaceMd,
+                        0,
+                        AppSizes.spaceMd,
+                        96,
+                      ),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: AppSizes.spaceMd,
+                            ),
+                            child: InventoryListCard(
+                              machine: machines[index],
+                            ),
+                          ),
+                          childCount: machines.length,
+                        ),
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
 
             // ── Sticky bottom bar ──────────────────────────────────────────
@@ -254,6 +262,17 @@ class InventoryScreen extends ConsumerWidget {
 
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
+Future<void> _refreshInventoryData(WidgetRef ref) async {
+  try {
+    await Future.wait([
+      ref.refresh(allProductsProvider.future),
+      ref.refresh(categoriesProvider.future),
+    ]);
+  } catch (_) {
+    // Existing provider error UI handles failed refreshes.
+  }
+}
+
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
 
@@ -269,7 +288,7 @@ class _EmptyState extends StatelessWidget {
             color: AppColors.textSecondary.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             'No machines found',
             style: TextStyle(
               fontSize: 16,

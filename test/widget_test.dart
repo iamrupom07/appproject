@@ -1,5 +1,7 @@
 import 'package:abroz_parts_plus/features/home/domain/machine_model.dart';
+import 'package:abroz_parts_plus/features/home/presentation/home_screen.dart';
 import 'package:abroz_parts_plus/features/inventory/domain/inventory_machine_model.dart';
+import 'package:abroz_parts_plus/features/inventory/presentation/inventory_screen.dart';
 import 'package:abroz_parts_plus/features/inventory/presentation/providers/inventory_providers.dart';
 import 'package:abroz_parts_plus/features/inventory/presentation/widgets/inventory_machine_card.dart';
 import 'package:abroz_parts_plus/features/products/data/product_dto.dart';
@@ -128,6 +130,44 @@ void main() {
     await tester.pump();
 
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Home screen includes pull-to-refresh', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          allProductsProvider.overrideWith((ref) async => <ProductDto>[]),
+          categoriesProvider.overrideWith((ref) async => <CategoryDto>[]),
+        ],
+        child: const MaterialApp(
+          home: HomeScreen(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(RefreshIndicator), findsOneWidget);
+  });
+
+  testWidgets('Inventory screen includes pull-to-refresh', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          allProductsProvider.overrideWith((ref) async => <ProductDto>[]),
+          categoriesProvider.overrideWith((ref) async => <CategoryDto>[]),
+        ],
+        child: const MaterialApp(
+          home: InventoryScreen(),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(RefreshIndicator), findsOneWidget);
   });
 }
 

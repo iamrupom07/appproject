@@ -146,9 +146,6 @@ class ProductDetailScreen extends ConsumerWidget {
                         DetailTab.shipping => _ShippingTab(
                           shippingInfo: detail.shippingInfo,
                         ),
-                        DetailTab.condition => _ConditionTab(
-                          conditionNotes: detail.conditionNotes,
-                        ),
                       },
                     ),
                   ),
@@ -353,22 +350,6 @@ class _ShippingTab extends StatelessWidget {
   }
 }
 
-class _ConditionTab extends StatelessWidget {
-  const _ConditionTab({required this.conditionNotes});
-  final String conditionNotes;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Condition', style: AppTextStyles.headingMedium),
-        const SizedBox(height: AppSizes.spaceSm),
-        Text(conditionNotes, style: AppTextStyles.bodyMedium),
-      ],
-    );
-  }
-}
 
 // ─── Sticky Tab Bar Delegate ──────────────────────────────────────────────────
 

@@ -39,9 +39,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
     shippingInfo: 'Available for delivery within the Philippines. '
         'Contact us to arrange pickup or delivery. '
         'Export available upon request.',
-    conditionNotes:
-        'Used in good condition. Inspected by our technicians prior to listing. '
-        'Full history available upon inquiry.',
   ),
 
   // ── 2 · Swing Motor Assembly ───────────────────────────────────────────────
@@ -79,9 +76,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
     shippingInfo:
         'Available for nationwide delivery. Heavy freight handled by our logistics partner. '
         'Contact us for a delivery quote.',
-    conditionNotes:
-        'Refurbished. All internal components inspected and replaced as needed. '
-        'Performance-tested prior to listing.',
   ),
 
   // ── 3 · Boom Cylinder Seal Kit ─────────────────────────────────────────────
@@ -119,8 +113,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
     shippingInfo:
         'Lightweight — ships via standard courier nationwide. '
         'Same-day dispatch on orders placed before 2 PM.',
-    conditionNotes:
-        'Brand new, factory-sealed packaging. OEM manufacturer guarantee applies.',
   ),
 
   // ── 4 · Hydraulic Main Pump ────────────────────────────────────────────────
@@ -156,8 +148,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
         '• Warranty available on request',
     shippingInfo: 'Available for delivery within the Philippines. '
         'Contact us for pricing and delivery schedule.',
-    conditionNotes:
-        'Refurbished unit. Fully pressure-tested. Ready to install.',
   ),
 
   // ── 5 · Radiator Assembly ──────────────────────────────────────────────────
@@ -195,9 +185,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
     shippingInfo:
         'Requires specialist freight due to size. '
         'We coordinate delivery with your site logistics. Contact us to arrange.',
-    conditionNotes:
-        'Used in good condition. Core tested to 1.5× operating pressure. '
-        'Minor cosmetic blemishes only.',
   ),
 
   // ── 6 · Control Valve Assembly ────────────────────────────────────────────
@@ -235,9 +222,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
     shippingInfo:
         'Out-of-stock items ship within 7–14 business days of order confirmation. '
         'Contact us to reserve your unit.',
-    conditionNotes:
-        'Refurbished. Out of stock — can be sourced on order. '
-        'Lead time approximately 10 business days.',
   ),
 
   // ── 7 · Track Chain Assembly ──────────────────────────────────────────────
@@ -273,8 +257,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
         '• Fast local delivery available',
     shippingInfo: 'Available for delivery across the Philippines. '
         'Contact us to confirm availability and schedule.',
-    conditionNotes:
-        'Used in good condition. Wear within acceptable limits. Inspection report available.',
   ),
 
   // ── 8 · Bucket Tooth & Adapter Set ───────────────────────────────────────
@@ -311,7 +293,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
         '• In stock — same-day dispatch available',
     shippingInfo:
         'Ships via standard courier. Typically delivered within 2–3 business days.',
-    conditionNotes: 'Brand new OEM parts. Factory packaging. Komatsu warranty applies.',
   ),
 
   // ── 9 · Cabin Wiring Harness ──────────────────────────────────────────────
@@ -348,9 +329,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
         '• Ideal replacement for short-circuit or damaged harnesses',
     shippingInfo:
         'Ships rolled and protected in a rigid tube. Nationwide delivery available.',
-    conditionNotes:
-        'Used in good condition. No cut wires or tape repairs. '
-        'Connectors clean and corrosion-free.',
   ),
 
   // ── 10 · Turn Table Bearing ───────────────────────────────────────────────
@@ -388,9 +366,6 @@ const Map<String, MachineDetailModel> kMockMachineDetails = {
     shippingInfo:
         'Heavy item — freight delivery only. We coordinate with your preferred carrier. '
         'Contact us for a freight quote.',
-    conditionNotes:
-        'Used in good condition. Grease nipples intact. '
-        'No cracked races or chipped teeth observed.',
   ),
 };
 
@@ -421,5 +396,4 @@ MachineDetailModel fallbackDetail(String id) => MachineDetailModel(
       description: 'No details available for this item.',
       features: '• Details coming soon',
       shippingInfo: 'Contact us for shipping information.',
-      conditionNotes: 'Condition details not available.',
     );

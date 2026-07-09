@@ -17,7 +17,6 @@ class ProductDto {
     required this.description,
     this.features = const [],
     this.shippingInfo,
-    this.conditionNotes,
     this.images = const [],
     this.status,
     this.createdAt,
@@ -36,7 +35,6 @@ class ProductDto {
   final String description;
   final List<String> features;
   final String? shippingInfo;
-  final String? conditionNotes;
   final List<String> images;
   final String? status; // 'active' | 'draft'
   final DateTime? createdAt;
@@ -66,7 +64,6 @@ class ProductDto {
       description: _stringOrNull(json['description']) ?? '',
       features: _stringList(json['features']),
       shippingInfo: _stringOrNull(json['shippingInfo']),
-      conditionNotes: _stringOrNull(json['conditionNotes']),
       images: _stringList(json['images']),
       status: _stringOrNull(json['status']),
       createdAt: _dateTimeOrNull(json['createdAt']),

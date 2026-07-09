@@ -42,7 +42,6 @@ class DetailTabBar extends ConsumerWidget {
         DetailTab.specifications => 'Specifications',
         DetailTab.features => 'Features',
         DetailTab.shipping => 'Shipping',
-        DetailTab.condition => 'Condition',
       };
 }
 

@@ -6,7 +6,7 @@ import '../../domain/machine_detail_model.dart';
 
 // ─── Active Detail Tab ────────────────────────────────────────────────────────
 
-enum DetailTab { overview, specifications, features, shipping, condition }
+enum DetailTab { overview, specifications, features, shipping }
 
 final detailTabProvider = StateProvider.autoDispose<DetailTab>(
   (ref) => DetailTab.overview,
@@ -93,8 +93,6 @@ MachineDetailModel _dtoToDetailModel(ProductDto dto) {
     features: featuresText,
     shippingInfo: dto.shippingInfo ??
         'Contact us to arrange shipping or pickup.',
-    conditionNotes: dto.conditionNotes ??
-        'Inspected before listing. Inquire for full history.',
     has3DView: false,
   );
 }
