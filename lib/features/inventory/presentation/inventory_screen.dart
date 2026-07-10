@@ -22,11 +22,26 @@ const double _inventoryGridCardHeight = 292;
 
 /// Full Inventory screen.
 /// Composes all sub-widgets; all state lives in providers.
-class InventoryScreen extends ConsumerWidget {
+class InventoryScreen extends ConsumerStatefulWidget {
   const InventoryScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<InventoryScreen> createState() => _InventoryScreenState();
+}
+
+class _InventoryScreenState extends ConsumerState<InventoryScreen> {
+  // Shared with InventorySearchBar so the header's search icon can jump
+  // focus straight into the search field instead of doing nothing.
+  final FocusNode _searchFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final machines = ref.watch(filteredInventoryProvider);
     final viewMode = ref.watch(inventoryViewModeProvider);
     final isLoading = ref.watch(inventoryLoadingProvider);
@@ -65,6 +80,8 @@ class InventoryScreen extends ConsumerWidget {
                       ),
                       child: InventoryHeaderBar(
                         machineCount: machines.length,
+                        onSearchTap: () => _searchFocusNode.requestFocus(),
+                        onFilterTap: () => showFilterBottomSheet(context),
                       ),
                     ),
                   ),
@@ -74,12 +91,12 @@ class InventoryScreen extends ConsumerWidget {
                   ),
 
                   // ── Search bar ────────────────────────────────────────────
-                  const SliverToBoxAdapter(
+                  SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: AppSizes.spaceMd,
                       ),
-                      child: InventorySearchBar(),
+                      child: InventorySearchBar(focusNode: _searchFocusNode),
                     ),
                   ),
 

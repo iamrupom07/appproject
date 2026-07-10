@@ -33,7 +33,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   // Tracks whether the API warm-up ping has completed
   bool _apiReady = false;
-  // Tracks whether the minimum splash animation has finished (2 s minimum)
+  // No longer gated behind an artificial timer — set true immediately so
+  // navigation only waits on the warm-up/prefetch, not a fixed delay.
   bool _minDelayPassed = false;
   // Prevent double-navigation
   bool _navigated = false;
@@ -107,12 +108,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       if (mounted) _taglineController.forward();
     });
 
-    // Minimum 2 s on splash so the logo animation is always visible
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      setState(() => _minDelayPassed = true);
-      _maybeNavigate();
-    });
+    // No artificial minimum hold — navigate as soon as the warm-up/prefetch
+    // finishes so the home screen opens without an extra imposed delay.
+    _minDelayPassed = true;
 
     // Prefetch products + categories in parallel during splash so the
     // home screen data is already in the Riverpod cache when we arrive.

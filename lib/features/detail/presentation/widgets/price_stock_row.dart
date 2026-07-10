@@ -32,54 +32,64 @@ class PriceStockRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // ── Tappable price area ──────────────────────────────────────────────
-        GestureDetector(
-          onTap: _openMessenger,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Price',
-                style: AppTextStyles.bodySmall,
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  Text(
-                    'Upon Request',
-                    style: AppTextStyles.priceLarge.copyWith(fontSize: 18),
-                  ),
-                  const SizedBox(width: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
+        // Wrapped in Expanded so this block can never push the stock pill
+        // past the edge of the screen; if it runs out of horizontal room it
+        // wraps onto a second line instead of overflowing.
+        Expanded(
+          child: GestureDetector(
+            onTap: _openMessenger,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Price',
+                  style: AppTextStyles.bodySmall,
+                ),
+                const SizedBox(height: 2),
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: [
+                    Text(
+                      'Upon Request',
+                      style: AppTextStyles.priceLarge.copyWith(fontSize: 18),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    decoration: BoxDecoration(
-                      color: AppColors.gold,
-                      borderRadius: BorderRadius.circular(AppSizes.radiusPill),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const MessengerLogo(size: 13),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Get Quotation',
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.gold,
+                        borderRadius:
+                            BorderRadius.circular(AppSizes.radiusPill),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const MessengerLogo(size: 13),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Get Quotation',
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-        const Spacer(),
+        const SizedBox(width: AppSizes.spaceSm),
         _StockPill(status: status),
       ],
     );

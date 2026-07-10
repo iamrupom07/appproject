@@ -9,7 +9,12 @@ import '../providers/inventory_providers.dart';
 /// Search bar scoped to the inventory screen.
 /// Writes to [inventorySearchQueryProvider] on each keystroke.
 class InventorySearchBar extends ConsumerStatefulWidget {
-  const InventorySearchBar({super.key});
+  const InventorySearchBar({super.key, this.focusNode});
+
+  /// Optional externally-owned focus node so other widgets (e.g. the
+  /// header's search icon) can jump focus into this field on demand.
+  /// If omitted, the widget manages its own internal focus node.
+  final FocusNode? focusNode;
 
   @override
   ConsumerState<InventorySearchBar> createState() => _InventorySearchBarState();
@@ -17,16 +22,23 @@ class InventorySearchBar extends ConsumerStatefulWidget {
 
 class _InventorySearchBarState extends ConsumerState<InventorySearchBar> {
   late final TextEditingController _controller;
+  FocusNode? _internalFocusNode;
+
+  FocusNode get _focusNode => widget.focusNode ?? _internalFocusNode!;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    if (widget.focusNode == null) {
+      _internalFocusNode = FocusNode();
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _internalFocusNode?.dispose();
     super.dispose();
   }
 
@@ -47,6 +59,7 @@ class _InventorySearchBarState extends ConsumerState<InventorySearchBar> {
       ),
       child: TextField(
         controller: _controller,
+        focusNode: _focusNode,
         onChanged: (v) =>
             ref.read(inventorySearchQueryProvider.notifier).state = v,
         style: AppTextStyles.bodyMedium,

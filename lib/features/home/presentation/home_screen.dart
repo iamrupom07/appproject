@@ -46,6 +46,7 @@ class HomeScreen extends ConsumerWidget {
               child: HomeHeaderBar(
                 userName: 'User',
                 dateLabel: dateLabel,
+                onSearchTap: () => context.push('/search'),
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: AppSizes.spaceMd)),
